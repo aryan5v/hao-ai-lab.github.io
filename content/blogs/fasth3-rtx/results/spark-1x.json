@@ -258,5 +258,123 @@
       "additional_untimed_warmup_prompt": "harbor",
       "extra_warmup_excluded_from_medians": true
     }
+  },
+  {
+    "device": "spark-1x",
+    "hardware": "DGX Spark GB10",
+    "model": "trim-nvfp4",
+    "repo": "FastVideo/FastVideo-FastH3-Trim-8-Step-NVFP4",
+    "revision": "cae9ceb6feefe77d34a56640782cda3909363f19",
+    "prompt": "ceramics",
+    "width": 1344,
+    "height": 768,
+    "frames": 124,
+    "seed": 1234,
+    "e2e_median_s": 340.52765431592707,
+    "e2e_runs_s": [
+      343.86512294900604,
+      337.1901856828481
+    ],
+    "warmup_s": 367.6078038918786,
+    "denoise_s": 235.94523620954715,
+    "decode_s": 103.36547941993922,
+    "peak_gpu_gib": 40.79188776016235,
+    "peak_host_gib": 9.611957550048828,
+    "fastvideo_commit": "6ccdbc761e6b854003f472e39b826c06cb54de60",
+    "env": {
+      "FASTVIDEO_MINIMAX_H3_FUSIONS": "all",
+      "FASTVIDEO_NVFP4_MM_BACKEND": "cutlass",
+      "FASTVIDEO_H3_VAE_TILE_BATCH": "1",
+      "FASTVIDEO_VSA_TRITON": "1",
+      "FASTVIDEO_VSA_SM100A": "0",
+      "FASTVIDEO_FA4": "0",
+      "FASTVIDEO_ATTENTION_BACKEND": "VIDEO_SPARSE_ATTN_H3",
+      "FASTVIDEO_STAGE_LOGGING": "1"
+    },
+    "status": "ok",
+    "notes": "All resident. GPU peak covers rank0 allocator stage maxima. Host peak is summed measured driver/worker process RSS maxima, includes shared pages, excludes unrelated services. No CUDA launch blocking; SM121 PDL-off quantizer fence retained. Warmup and both timed video/audio streams match per prompt and all clips sampled visually coherent. This batch used an extra untimed harbor warmup in the same process, six calls; both warmups excluded. No BF16 parity or speech/lipsync claim.",
+    "memory_limit_gib": 128,
+    "layer_profile": "h3_dit_vsa",
+    "protocol": {
+      "untimed_warmups": 2,
+      "timed_calls_per_prompt": 2,
+      "calls_per_resolution": 6,
+      "extra_harbor_warmup": true,
+      "same_process": true
+    },
+    "quality": {
+      "decoded_video_md5": "983807e1c1211a4c76021c792af01229",
+      "decoded_audio_md5": "fb4ac3e462c37884a862642d4866730a",
+      "repeated_video_match": true,
+      "repeated_audio_match": true,
+      "visual_review": "coherent pottery/harbor scenes across all sampled clips, no corruption",
+      "frames": 124,
+      "fps": 24,
+      "audio": {
+        "mp4": "trim-nvfp4-ceramics-1344x768-run-01.mp4",
+        "decoded_audio_md5": "fb4ac3e462c37884a862642d4866730a",
+        "integrated_lufs": -29.9,
+        "true_peak_dbfs": -15.8
+      }
+    }
+  },
+  {
+    "device": "spark-1x",
+    "hardware": "DGX Spark GB10",
+    "model": "trim-nvfp4",
+    "repo": "FastVideo/FastVideo-FastH3-Trim-8-Step-NVFP4",
+    "revision": "cae9ceb6feefe77d34a56640782cda3909363f19",
+    "prompt": "harbor",
+    "width": 1344,
+    "height": 768,
+    "frames": 124,
+    "seed": 1234,
+    "e2e_median_s": 339.5916384344455,
+    "e2e_runs_s": [
+      339.81743145990185,
+      339.3658454089891
+    ],
+    "warmup_s": 341.5296500721015,
+    "denoise_s": 238.59935290750582,
+    "decode_s": 99.72330186644103,
+    "peak_gpu_gib": 38.66124248504639,
+    "peak_host_gib": 9.604377746582031,
+    "fastvideo_commit": "6ccdbc761e6b854003f472e39b826c06cb54de60",
+    "env": {
+      "FASTVIDEO_MINIMAX_H3_FUSIONS": "all",
+      "FASTVIDEO_NVFP4_MM_BACKEND": "cutlass",
+      "FASTVIDEO_H3_VAE_TILE_BATCH": "1",
+      "FASTVIDEO_VSA_TRITON": "1",
+      "FASTVIDEO_VSA_SM100A": "0",
+      "FASTVIDEO_FA4": "0",
+      "FASTVIDEO_ATTENTION_BACKEND": "VIDEO_SPARSE_ATTN_H3",
+      "FASTVIDEO_STAGE_LOGGING": "1"
+    },
+    "status": "ok",
+    "notes": "All resident. GPU peak covers rank0 allocator stage maxima. Host peak is summed measured driver/worker process RSS maxima, includes shared pages, excludes unrelated services. No CUDA launch blocking; SM121 PDL-off quantizer fence retained. Warmup and both timed video/audio streams match per prompt and all clips sampled visually coherent. This batch used an extra untimed harbor warmup in the same process, six calls; both warmups excluded. No BF16 parity or speech/lipsync claim.",
+    "memory_limit_gib": 128,
+    "layer_profile": "h3_dit_vsa",
+    "protocol": {
+      "untimed_warmups": 2,
+      "timed_calls_per_prompt": 2,
+      "calls_per_resolution": 6,
+      "extra_harbor_warmup": true,
+      "same_process": true
+    },
+    "quality": {
+      "decoded_video_md5": "9602351d223c92d7e7967dc027aa63c5",
+      "decoded_audio_md5": "54faf6b19a8b1685d4d604cf69eef932",
+      "repeated_video_match": true,
+      "repeated_audio_match": true,
+      "visual_review": "coherent pottery/harbor scenes across all sampled clips, no corruption",
+      "frames": 124,
+      "fps": 24,
+      "audio": {
+        "mp4": "trim-nvfp4-harbor-1344x768-run-01.mp4",
+        "decoded_audio_md5": "54faf6b19a8b1685d4d604cf69eef932",
+        "integrated_lufs": -31.9,
+        "true_peak_dbfs": -16.5
+      }
+    }
   }
 ]
