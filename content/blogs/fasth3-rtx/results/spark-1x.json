@@ -1,0 +1,45 @@
+[
+  {
+    "device": "spark-1x",
+    "hardware": "DGX Spark GB10",
+    "model": "trim-nvfp4",
+    "repo": "FastVideo/FastVideo-FastH3-Trim-8-Step-NVFP4",
+    "revision": "cae9ceb6feefe77d34a56640782cda3909363f19",
+    "prompt": "ceramics",
+    "width": 832,
+    "height": 480,
+    "frames": 124,
+    "seed": 1234,
+    "e2e_median_s": 124.09006721805781,
+    "e2e_runs_s": [
+      125.79297597613186,
+      122.38715845998377
+    ],
+    "warmup_s": 133.34674713411368,
+    "denoise_s": 80.63019988150336,
+    "decode_s": 42.568145438912325,
+    "peak_gpu_gib": 34.17921257019043,
+    "peak_host_gib": 12.701042175292969,
+    "fastvideo_commit": "6ccdbc761e6b854003f472e39b826c06cb54de60",
+    "env": {
+      "FASTVIDEO_MINIMAX_H3_FUSIONS": "all",
+      "FASTVIDEO_NVFP4_MM_BACKEND": "cutlass",
+      "FASTVIDEO_H3_VAE_TILE_BATCH": "1",
+      "FASTVIDEO_VSA_TRITON": "1",
+      "FASTVIDEO_VSA_SM100A": "0",
+      "FASTVIDEO_FA4": "0",
+      "FASTVIDEO_ATTENTION_BACKEND": "VIDEO_SPARSE_ATTN_H3",
+      "FASTVIDEO_STAGE_LOGGING": "1"
+    },
+    "status": "ok",
+    "notes": "All resident. GPU peak covers rank0 allocator stage maxima. Host peak is summed measured driver/worker process RSS maxima, includes shared pages, excludes unrelated services. No CUDA launch blocking; SM121 PDL-off quantizer fence retained. Warmup and both timed clips visually reviewed coherent; decoded video MD5 identical827c61f93b59298cefe8fb9cc00aec95. No BF16 pixel-parity or speech/lipsync claim.",
+    "layer_profile": "h3_dit_vsa",
+    "quality": {
+      "decoded_video_md5": "827c61f93b59298cefe8fb9cc00aec95",
+      "repeated_video_match": true,
+      "visual_review": "coherent pottery scene, no corruption",
+      "frames": 124,
+      "fps": 24
+    }
+  }
+]
