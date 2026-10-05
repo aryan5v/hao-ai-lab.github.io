@@ -46,85 +46,85 @@ Each row is one machine. The left clip is FastH3 V2 and the right clip is FastH3
   <div class="fasth3-rtx-colhead">FastH3 Trim</div>
   <div class="fasth3-rtx-rowhead"><b>RTX 5090</b><span>32 GB · NVFP4</span></div>
   <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="rtx5090/v2-nvfp4-showcase.mp4">
+    <div class="fasth3-rtx-frame" data-file="rtx5090/v2-nvfp4-corgi-weather.mp4">
       <video controls playsinline preload="metadata" aria-label="FastH3 V2 on RTX 5090">
-        <source src="img/videos/rtx5090/v2-nvfp4-showcase.mp4" type="video/mp4">
+        <source src="img/videos/rtx5090/v2-nvfp4-corgi-weather.mp4" type="video/mp4">
       </video>
     </div>
     <figcaption><b>V2 · NVFP4</b><span>— s</span></figcaption>
   </figure>
   <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="rtx5090/trim-nvfp4-showcase.mp4">
+    <div class="fasth3-rtx-frame" data-file="rtx5090/trim-nvfp4-corgi-weather.mp4">
       <video controls playsinline preload="metadata" aria-label="FastH3 Trim on RTX 5090">
-        <source src="img/videos/rtx5090/trim-nvfp4-showcase.mp4" type="video/mp4">
+        <source src="img/videos/rtx5090/trim-nvfp4-corgi-weather.mp4" type="video/mp4">
       </video>
     </div>
-    <figcaption><b>Trim · NVFP4</b><span>— s</span></figcaption>
+    <figcaption><b>Trim · NVFP4</b><span>19.1 s</span></figcaption>
   </figure>
   <div class="fasth3-rtx-rowhead"><b>RTX PRO 6000</b><span>96 GB · NVFP4</span></div>
   <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="rtx-pro-6000/v2-nvfp4-showcase.mp4">
+    <div class="fasth3-rtx-frame" data-file="rtx-pro-6000/v2-nvfp4-corgi-weather.mp4">
       <video controls playsinline preload="metadata" aria-label="FastH3 V2 on RTX PRO 6000">
-        <source src="img/videos/rtx-pro-6000/v2-nvfp4-showcase.mp4" type="video/mp4">
+        <source src="img/videos/rtx-pro-6000/v2-nvfp4-corgi-weather.mp4" type="video/mp4">
       </video>
     </div>
     <figcaption><b>V2 · NVFP4</b><span>— s</span></figcaption>
   </figure>
   <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="rtx-pro-6000/trim-nvfp4-showcase.mp4">
+    <div class="fasth3-rtx-frame" data-file="rtx-pro-6000/trim-nvfp4-corgi-weather.mp4">
       <video controls playsinline preload="metadata" aria-label="FastH3 Trim on RTX PRO 6000">
-        <source src="img/videos/rtx-pro-6000/trim-nvfp4-showcase.mp4" type="video/mp4">
+        <source src="img/videos/rtx-pro-6000/trim-nvfp4-corgi-weather.mp4" type="video/mp4">
       </video>
     </div>
-    <figcaption><b>Trim · NVFP4</b><span>— s</span></figcaption>
+    <figcaption><b>Trim · NVFP4</b><span>12.2 s</span></figcaption>
   </figure>
   <div class="fasth3-rtx-rowhead"><b>RTX 4090</b><span>24 GB · FP8</span></div>
   <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="rtx4090-24gb/v2-fp8-showcase.mp4">
+    <div class="fasth3-rtx-frame" data-file="rtx4090-24gb/v2-fp8-corgi-weather.mp4">
       <video controls playsinline preload="metadata" aria-label="FastH3 V2 on RTX 4090">
-        <source src="img/videos/rtx4090-24gb/v2-fp8-showcase.mp4" type="video/mp4">
+        <source src="img/videos/rtx4090-24gb/v2-fp8-corgi-weather.mp4" type="video/mp4">
       </video>
     </div>
     <figcaption><b>V2 · FP8</b><span>— s</span></figcaption>
   </figure>
   <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="rtx4090-24gb/trim-fp8-showcase.mp4">
+    <div class="fasth3-rtx-frame" data-file="rtx4090-24gb/trim-fp8-corgi-weather.mp4">
       <video controls playsinline preload="metadata" aria-label="FastH3 Trim on RTX 4090">
-        <source src="img/videos/rtx4090-24gb/trim-fp8-showcase.mp4" type="video/mp4">
+        <source src="img/videos/rtx4090-24gb/trim-fp8-corgi-weather.mp4" type="video/mp4">
       </video>
     </div>
-    <figcaption><b>Trim · FP8</b><span>— s</span></figcaption>
+    <figcaption><b>Trim · FP8</b><span>43.9 s</span></figcaption>
   </figure>
   <div class="fasth3-rtx-rowhead"><b>DGX Spark</b><span>128 GB unified · NVFP4</span></div>
   <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="spark-1x/v2-nvfp4-showcase.mp4">
+    <div class="fasth3-rtx-frame" data-file="spark-1x/v2-nvfp4-corgi-weather.mp4">
       <video controls playsinline preload="metadata" aria-label="FastH3 V2 on DGX Spark">
-        <source src="img/videos/spark-1x/v2-nvfp4-showcase.mp4" type="video/mp4">
+        <source src="img/videos/spark-1x/v2-nvfp4-corgi-weather.mp4" type="video/mp4">
       </video>
     </div>
     <figcaption><b>V2 · NVFP4</b><span>— s</span></figcaption>
   </figure>
   <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="spark-1x/trim-nvfp4-showcase.mp4">
+    <div class="fasth3-rtx-frame" data-file="spark-1x/trim-nvfp4-corgi-weather.mp4">
       <video controls playsinline preload="metadata" aria-label="FastH3 Trim on DGX Spark">
-        <source src="img/videos/spark-1x/trim-nvfp4-showcase.mp4" type="video/mp4">
+        <source src="img/videos/spark-1x/trim-nvfp4-corgi-weather.mp4" type="video/mp4">
       </video>
     </div>
-    <figcaption><b>Trim · NVFP4</b><span>— s</span></figcaption>
+    <figcaption><b>Trim · NVFP4</b><span>125.8 s</span></figcaption>
   </figure>
   <div class="fasth3-rtx-rowhead"><b>Mac (M4 Max)</b><span>36 GB unified · INT6</span></div>
   <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="m4max/v2-int6-showcase.mp4">
+    <div class="fasth3-rtx-frame" data-file="m4max/v2-int6-corgi-weather.mp4">
       <video controls playsinline preload="metadata" aria-label="FastH3 V2 on Mac (M4 Max)">
-        <source src="img/videos/m4max/v2-int6-showcase.mp4" type="video/mp4">
+        <source src="img/videos/m4max/v2-int6-corgi-weather.mp4" type="video/mp4">
       </video>
     </div>
     <figcaption><b>V2 · INT6</b><span>— s</span></figcaption>
   </figure>
   <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="m4max/trim-int6-showcase.mp4">
+    <div class="fasth3-rtx-frame" data-file="m4max/trim-int6-corgi-weather.mp4">
       <video controls playsinline preload="metadata" aria-label="FastH3 Trim on Mac (M4 Max)">
-        <source src="img/videos/m4max/trim-int6-showcase.mp4" type="video/mp4">
+        <source src="img/videos/m4max/trim-int6-corgi-weather.mp4" type="video/mp4">
       </video>
     </div>
     <figcaption><b>Trim · INT6</b><span>— s</span></figcaption>
@@ -144,7 +144,7 @@ We report two numbers per machine: a 5 s clip at 832×480 and a 5 s clip at 1344
 |---|---|---:|---:|---:|---:|
 | 4× GB200 | data-center reference | — | 4.3 s | — | — |
 | RTX PRO 6000 | 96 GB | — | 12.2 s | — | 32.5 s |
-| RTX 5090 | 32 GB | — | 17.4 s | — | — |
+| RTX 5090 | 32 GB | — | 19.1 s | — | 39.6 s |
 | RTX 4090 | 24 GB | — | 43.9 s | — | — |
 | RTX 4090, 16 GB limit | 16 GB | — | — | — | — |
 | RTX 4090, 12 GB limit | 12 GB | — | — | — | — |
