@@ -32,7 +32,7 @@
       "FASTVIDEO_STAGE_LOGGING": "1"
     },
     "status": "ok",
-    "notes": "All resident. GPU peak covers rank0 allocator stage maxima. Host peak is summed measured driver/worker process RSS maxima, includes shared pages, excludes unrelated services. No CUDA launch blocking; SM121 PDL-off quantizer fence retained. Warmup and both timed clips visually reviewed coherent; decoded video MD5 identical 827c61f93b59298cefe8fb9cc00aec95. No BF16 pixel-parity or speech/lipsync claim.",
+    "notes": "All resident. GPU peak covers rank0 allocator stage maxima. Host peak is summed measured driver/worker process RSS maxima, includes shared pages, excludes unrelated services. No CUDA launch blocking; SM121 PDL-off quantizer fence retained. Warmup and both timed clips visually reviewed coherent; decoded video MD5 identical 827c61f93b59298cefe8fb9cc00aec95. No BF16 pixel-parity or speech/lipsync claim. Earlier task protocol used one extra untimed harbor warmup: six calls per resolution in the same process. Both warmups excluded from medians. Memory limit128GiB.",
     "layer_profile": "h3_dit_vsa",
     "quality": {
       "decoded_video_md5": "827c61f93b59298cefe8fb9cc00aec95",
@@ -118,7 +118,16 @@
         "speech_or_lipsync_parity": "not evaluated",
         "prompt_file_sha256": "b34b6b57c56a59ba667a56f5de81254b00ed6374ce8a0ebb104fca7a886362f8"
       }
-    ]
+    ],
+    "memory_limit_gib": 128,
+    "protocol": {
+      "warmups_per_model_resolution": 2,
+      "timed_calls_per_prompt": 2,
+      "total_calls_per_model_resolution": 6,
+      "same_process_both_prompts": true,
+      "additional_untimed_warmup_prompt": "harbor",
+      "extra_warmup_excluded_from_medians": true
+    }
   },
   {
     "device": "spark-1x",
@@ -153,7 +162,7 @@
       "FASTVIDEO_STAGE_LOGGING": "1"
     },
     "status": "ok",
-    "notes": "All resident. GPU peak covers rank0 allocator stage maxima. Host peak is summed measured driver/worker process RSS maxima, includes shared pages, excludes unrelated services. No CUDA launch blocking; SM121 PDL-off quantizer fence retained. Warmup and both timed video hashes identical, contact sheet visually reviewed. No BF16 pixel-parity or speech/lipsync claim.",
+    "notes": "All resident. GPU peak covers rank0 allocator stage maxima. Host peak is summed measured driver/worker process RSS maxima, includes shared pages, excludes unrelated services. No CUDA launch blocking; SM121 PDL-off quantizer fence retained. Warmup and both timed video hashes identical, contact sheet visually reviewed. No BF16 pixel-parity or speech/lipsync claim. Earlier task protocol used one extra untimed harbor warmup: six calls per resolution in the same process. Both warmups excluded from medians. Memory limit128GiB.",
     "layer_profile": "h3_dit_vsa",
     "quality": {
       "decoded_video_md5": "5bbd61247f42b276d8a84fe02882bbb6",
@@ -239,6 +248,15 @@
         "speech_or_lipsync_parity": "not evaluated",
         "prompt_file_sha256": "b34b6b57c56a59ba667a56f5de81254b00ed6374ce8a0ebb104fca7a886362f8"
       }
-    ]
+    ],
+    "memory_limit_gib": 128,
+    "protocol": {
+      "warmups_per_model_resolution": 2,
+      "timed_calls_per_prompt": 2,
+      "total_calls_per_model_resolution": 6,
+      "same_process_both_prompts": true,
+      "additional_untimed_warmup_prompt": "harbor",
+      "extra_warmup_excluded_from_medians": true
+    }
   }
 ]
