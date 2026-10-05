@@ -76,7 +76,7 @@ Each row is one machine. The left clip is FastH3 V2 and the right clip is FastH3
         <source src="img/videos/rtx-pro-6000/trim-nvfp4-corgi-weather.mp4#t=0.1" type="video/mp4">
       </video>
     </div>
-    <figcaption><b>Trim · NVFP4</b><span>12.2 s</span></figcaption>
+    <figcaption><b>Trim · NVFP4</b><span>12.0 s</span></figcaption>
   </figure>
   <div class="fasth3-rtx-rowhead"><b>RTX 4090</b><span>24 GB · FP8</span></div>
   <figure class="fasth3-rtx-clip">
@@ -143,7 +143,7 @@ We report two numbers per machine: a 5 s clip at 832×480 and a 5 s clip at 1344
 | Machine | Memory | V2, 480p | Trim, 480p | V2, 768p | Trim, 768p |
 |---|---|---:|---:|---:|---:|
 | 4× GB200 | data-center reference | — | 4.3 s | — | — |
-| RTX PRO 6000 | 96 GB | 13.5 s | 12.2 s | 36.5 s | 32.5 s |
+| RTX PRO 6000 | 96 GB | 13.5 s | 12.0 s | 36.5 s | 32.5 s |
 | RTX 5090 | 32 GB | 19.6 s | 19.1 s | 42.4 s | 39.6 s |
 | RTX 4090 | 24 GB | — | 43.9 s | — | — |
 | RTX 4090, 16 GB limit | 16 GB | — | — | — | — |
@@ -224,9 +224,9 @@ We trained the new 42-block model directly with eight-step DMD2, using the FastH
 
 ## Where the time goes
 
-{{< image src="img/fig_stages.svg" alt="100% stacked bars. RTX 5090 Trim NVFP4, 480p, 5 s, 19.1 s: denoise 47%, decode 11%, rest 41%. DGX Spark Trim NVFP4, 480p, 5 s, 125.8 s: denoise 65%, decode 34%, rest 1%. Mac, M4 Max Trim MLX INT6, 480p, 5 s, 923.5 s: denoise 91%, decode 8%, rest 2%." width="100%" title="Figure 5. Share of end-to-end time per stage." >}}
+{{< image src="img/fig_stages.svg" alt="100% stacked bars. RTX PRO 6000 Trim NVFP4, 480p, 5 s, 12.0 s: denoise 78%, decode 17%, rest 5%. RTX 5090 Trim NVFP4, 480p, 5 s, 19.1 s: denoise 47%, decode 11%, rest 41%. DGX Spark Trim NVFP4, 480p, 5 s, 125.8 s: denoise 65%, decode 34%, rest 1%. Mac, M4 Max Trim MLX INT6, 480p, 5 s, 923.5 s: denoise 91%, decode 8%, rest 2%." width="100%" title="Figure 5. Share of end-to-end time per stage." >}}
 
-On one 4090, denoising is about 80% of the end-to-end time. Once the model fits in GPU memory and denoising gets fast, the other stages take a larger share. On four GB200s, the four-step V1 model spends 9.8 s computing a 10 s, 768p clip: 5.7 s denoising, 3.8 s decoding across the four GPUs, and the rest on text encoding. Moving frames out of the GPU workers and writing the MP4 take another 5.7 s, and that is the next stage we will optimize.
+Figure 5 splits one 5 s, 480p FastH3 Trim clip by stage on each machine. On the RTX PRO 6000 every model stays in GPU memory, and denoising is 78% of the 12.0 s. The RTX 5090 denoises just as fast (9.0 s), but with 32 GB it parks the text encoder and decoders in host memory between stages. Text encoding takes 2.8 s, and moving modules and frames between host and GPU and writing the MP4 take about 5 s more, so 41% of its 19.1 s is spent outside denoising and decoding. On a DGX Spark, decoding the video takes a third of the time (42.6 s); that is the next stage we will optimize there. On a Mac, denoising is 91% of the time because attention runs on the reference path until the Metal kernel handles partially filled tiles.
 
 ## Limitations and what comes next
 
