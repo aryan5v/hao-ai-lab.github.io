@@ -139,18 +139,19 @@ We report two numbers per machine: a 5 s clip at 832×480 and a 5 s clip at 1344
 
 {{< image src="img/fig_e2e.svg" alt="Paired thin bars per machine, FastH3 V2 and FastH3 Trim, end-to-end seconds for a 5 s, 832×480 clip on a log scale. Pending cells are outlined." width="100%" title="Figure 1. End-to-end time for a 5 s, 832×480 clip with audio. Four GB200s are a data-center reference; every other row is one machine." >}}
 
+<!-- results-table:start -->
 | Machine | Memory | V2, 480p | Trim, 480p | V2, 768p | Trim, 768p |
 |---|---|---:|---:|---:|---:|
-| 4× GB200 (data-center reference) | 4 × 186 GB | — | 4.3 s | — | — |
-| RTX PRO 6000 | 96 GB | — | 15.1 s | — | — |
+| 4× GB200 | data-center reference | — | 4.3 s | — | — |
+| RTX PRO 6000 | 96 GB | — | 12.2 s | — | 32.5 s |
 | RTX 5090 | 32 GB | — | 17.4 s | — | — |
 | RTX 4090 | 24 GB | — | 41.8 s | — | — |
 | RTX 4090, 16 GB limit | 16 GB | — | — | — | — |
 | RTX 4090, 12 GB limit | 12 GB | — | — | — | — |
 | DGX Spark | 128 GB unified | 141.4 s | 134.5 s | — | — |
 | 2× DGX Spark | 128 GB each | 87.2 s | 78.3 s | — | — |
-| Mac (M4 Max) | 36 GB unified | — | — | — | — |
-
+| Mac, M4 Max | 36 GB unified | — | — | — | — |
+<!-- results-table:end -->
 <div class="fasth3-rtx-todo"><b>TODO (numbers).</b> Device agents push <code>results/&lt;device&gt;.json</code>; Figure 1 is generated from those files. Dashes are pending.</div>
 
 ## Fitting H3 on one machine

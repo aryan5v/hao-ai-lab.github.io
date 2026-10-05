@@ -1,0 +1,134 @@
+[
+ {
+  "device": "rtx-pro-6000",
+  "hardware": "RTX PRO 6000",
+  "memory_limit_gib": null,
+  "model": "trim-nvfp4",
+  "repo": "FastVideo/FastVideo-FastH3-Trim-8-Step-NVFP4",
+  "prompt": "ceramics",
+  "width": 832,
+  "height": 480,
+  "frames": 124,
+  "e2e_median_s": 12.2,
+  "e2e_runs_s": [
+   12.2,
+   12.2
+  ],
+  "fastvideo_commit": "",
+  "env": {
+   "FASTVIDEO_FA4": "0",
+   "FASTVIDEO_STAGE_LOGGING": "1",
+   "FASTVIDEO_VSA_SM100A": "0",
+   "FASTVIDEO_H3_VSA_FP4": "1",
+   "FASTVIDEO_MINIMAX_H3_FUSIONS": "all",
+   "FASTVIDEO_NVFP4_MM_BACKEND": "cutlass",
+   "FASTVIDEO_H3_VAE_TILE_BATCH": "28",
+   "HEADLINE_SETTINGS": "480p5s,768p5s",
+   "HEADLINE_SHOWCASE": "/root/showcase_prompts.json",
+   "HEADLINE_CLIP_PREFIX": "trim-nvfp4",
+   "HEADLINE_OUT": "/vol/outputs/headline",
+   "HEADLINE_DEVICE": "1x RTX PRO 6000"
+  },
+  "status": "ok",
+  "notes": "bench_headline 480p5s"
+ },
+ {
+  "device": "rtx-pro-6000",
+  "hardware": "RTX PRO 6000",
+  "memory_limit_gib": null,
+  "model": "trim-nvfp4",
+  "repo": "FastVideo/FastVideo-FastH3-Trim-8-Step-NVFP4",
+  "prompt": "ceramics",
+  "width": 1344,
+  "height": 768,
+  "frames": 124,
+  "e2e_median_s": 32.42,
+  "e2e_runs_s": [
+   32.39,
+   32.45
+  ],
+  "fastvideo_commit": "",
+  "env": {
+   "FASTVIDEO_FA4": "0",
+   "FASTVIDEO_STAGE_LOGGING": "1",
+   "FASTVIDEO_VSA_SM100A": "0",
+   "FASTVIDEO_H3_VSA_FP4": "1",
+   "FASTVIDEO_MINIMAX_H3_FUSIONS": "all",
+   "FASTVIDEO_NVFP4_MM_BACKEND": "cutlass",
+   "FASTVIDEO_H3_VAE_TILE_BATCH": "28",
+   "HEADLINE_SETTINGS": "480p5s,768p5s",
+   "HEADLINE_SHOWCASE": "/root/showcase_prompts.json",
+   "HEADLINE_CLIP_PREFIX": "trim-nvfp4",
+   "HEADLINE_OUT": "/vol/outputs/headline",
+   "HEADLINE_DEVICE": "1x RTX PRO 6000"
+  },
+  "status": "ok",
+  "notes": "bench_headline 768p5s"
+ },
+ {
+  "device": "rtx-pro-6000",
+  "hardware": "RTX PRO 6000",
+  "memory_limit_gib": null,
+  "model": "trim-nvfp4",
+  "repo": "FastVideo/FastVideo-FastH3-Trim-8-Step-NVFP4",
+  "prompt": "harbor",
+  "width": 832,
+  "height": 480,
+  "frames": 124,
+  "e2e_median_s": 12.25,
+  "e2e_runs_s": [
+   12.23,
+   12.26
+  ],
+  "fastvideo_commit": "",
+  "env": {
+   "FASTVIDEO_FA4": "0",
+   "FASTVIDEO_STAGE_LOGGING": "1",
+   "FASTVIDEO_VSA_SM100A": "0",
+   "FASTVIDEO_H3_VSA_FP4": "1",
+   "FASTVIDEO_MINIMAX_H3_FUSIONS": "all",
+   "FASTVIDEO_NVFP4_MM_BACKEND": "cutlass",
+   "FASTVIDEO_H3_VAE_TILE_BATCH": "28",
+   "HEADLINE_SETTINGS": "480p5s,768p5s",
+   "HEADLINE_SHOWCASE": "/root/showcase_prompts.json",
+   "HEADLINE_CLIP_PREFIX": "trim-nvfp4",
+   "HEADLINE_OUT": "/vol/outputs/headline",
+   "HEADLINE_DEVICE": "1x RTX PRO 6000"
+  },
+  "status": "ok",
+  "notes": "bench_headline 480p5s"
+ },
+ {
+  "device": "rtx-pro-6000",
+  "hardware": "RTX PRO 6000",
+  "memory_limit_gib": null,
+  "model": "trim-nvfp4",
+  "repo": "FastVideo/FastVideo-FastH3-Trim-8-Step-NVFP4",
+  "prompt": "harbor",
+  "width": 1344,
+  "height": 768,
+  "frames": 124,
+  "e2e_median_s": 32.58,
+  "e2e_runs_s": [
+   32.57,
+   32.58
+  ],
+  "fastvideo_commit": "",
+  "env": {
+   "FASTVIDEO_FA4": "0",
+   "FASTVIDEO_STAGE_LOGGING": "1",
+   "FASTVIDEO_VSA_SM100A": "0",
+   "FASTVIDEO_H3_VSA_FP4": "1",
+   "FASTVIDEO_MINIMAX_H3_FUSIONS": "all",
+   "FASTVIDEO_NVFP4_MM_BACKEND": "cutlass",
+   "FASTVIDEO_H3_VAE_TILE_BATCH": "28",
+   "HEADLINE_SETTINGS": "480p5s,768p5s",
+   "HEADLINE_SHOWCASE": "/root/showcase_prompts.json",
+   "HEADLINE_CLIP_PREFIX": "trim-nvfp4",
+   "HEADLINE_OUT": "/vol/outputs/headline",
+   "HEADLINE_DEVICE": "1x RTX PRO 6000"
+  },
+  "status": "ok",
+  "notes": "bench_headline 768p5s"
+ }
+]
