@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="470" viewBox="0 0 760 470" role="img" aria-labelledby="t d"><title id="t">End-to-end generation time per clip on one GPU</title><desc id="d">Seconds from prompt to finished MP4. 480p 5 s: PRO 6000 V1 10.1, 5090 V1 12.9, PRO 6000 pruned 15.1, 5090 pruned 17.4, 4090 pruned FP8 41.8. 768p 10 s: 5090 V1 48.0, PRO 6000 V1 49.4, 5090 pruned 80.5, PRO 6000 pruned 83.9, 5090 V2 90.1.</desc>
+<style>
+  .bg{fill:#fcfcfb} .t1{fill:#0b0b0b} .t2{fill:#52514e} .grid{stroke:#e4e3de} .axis{stroke:#9b9a95}
+  .s1{fill:#33557d} .s2{fill:#b86a3c} .s3{fill:#b5afa5} .drop{fill:#b0463c} .ref{stroke:#52514e}
+  .gap{stroke:#fcfcfb} .on{fill:#ffffff} .on3{fill:#0b0b0b}
+  .ring{fill:none;stroke:#0b0b0b}
+  text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+  @media (prefers-color-scheme: dark){
+    .bg{fill:#1a1a19} .t1{fill:#ffffff} .t2{fill:#c3c2b7} .grid{stroke:#2e2e2c} .axis{stroke:#6b6a66}
+    .s1{fill:#7393bb} .s2{fill:#c27448} .s3{fill:#69655e} .drop{fill:#c9605a} .ref{stroke:#c3c2b7}
+    .gap{stroke:#1a1a19} .on{fill:#0b0b0b} .on3{fill:#ffffff}
+    .ring{fill:none;stroke:#ffffff}
+  }
+</style>
+<rect class="bg" width="760" height="470"/>
+<rect class="s1" x="24" y="18" width="12" height="12" rx="3"/><text class="t2" x="42" y="28" font-size="13">RTX 5090</text>
+<rect class="s2" x="123.2" y="18" width="12" height="12" rx="3"/><text class="t2" x="141.2" y="28" font-size="13">RTX 4090</text>
+<rect class="s3" x="222.4" y="18" width="12" height="12" rx="3"/><text class="t2" x="240.4" y="28" font-size="13">RTX PRO 6000</text>
+<line class="ref" x1="24" x2="46" y1="48" y2="48" stroke-width="1.5" stroke-dasharray="4 3"/><text class="t2" x="52" y="52" font-size="13">length of the clip itself (real time)</text>
+<text class="t1" x="24" y="80" font-size="14" font-weight="700">480p, 5-second clip</text>
+<text class="t1" x="24" y="106" font-size="13" font-weight="600">RTX PRO 6000<tspan class="t2" font-weight="400">  V1, 4-step</tspan></text><rect class="s3" x="274" y="92" width="33.2" height="20" rx="4"><title>RTX PRO 6000, V1, 4-step: 10.1 s</title></rect><text class="t1" x="314.2" y="106.5" font-size="13" font-weight="700">10.1 s<tspan class="t2" font-weight="400" font-size="12">  2.0× clip length</tspan></text>
+<text class="t1" x="24" y="136" font-size="13" font-weight="600">RTX 5090<tspan class="t2" font-weight="400">  V1, 4-step</tspan></text><rect class="s1" x="274" y="122" width="42.4" height="20" rx="4"><title>RTX 5090, V1, 4-step: 12.9 s</title></rect><text class="t1" x="323.4" y="136.5" font-size="13" font-weight="700">12.9 s<tspan class="t2" font-weight="400" font-size="12">  2.5× clip length</tspan></text>
+<text class="t1" x="24" y="166" font-size="13" font-weight="600">RTX PRO 6000<tspan class="t2" font-weight="400">  Pruned, 8-step</tspan></text><rect class="s3" x="274" y="152" width="49.6" height="20" rx="4"><title>RTX PRO 6000, Pruned, 8-step: 15.1 s</title></rect><text class="t1" x="330.6" y="166.5" font-size="13" font-weight="700">15.1 s<tspan class="t2" font-weight="400" font-size="12">  2.9× clip length</tspan></text>
+<text class="t1" x="24" y="196" font-size="13" font-weight="600">RTX 5090<tspan class="t2" font-weight="400">  Pruned, 8-step</tspan></text><rect class="s1" x="274" y="182" width="57.1" height="20" rx="4"><title>RTX 5090, Pruned, 8-step: 17.4 s</title></rect><text class="t1" x="338.1" y="196.5" font-size="13" font-weight="700">17.4 s<tspan class="t2" font-weight="400" font-size="12">  3.4× clip length</tspan></text>
+<text class="t1" x="24" y="226" font-size="13" font-weight="600">RTX 4090<tspan class="t2" font-weight="400">  Pruned, 8-step, FP8</tspan></text><rect class="s2" x="274" y="212" width="137.3" height="20" rx="4"><title>RTX 4090, Pruned, 8-step, FP8: 41.8 s</title></rect><text class="t1" x="418.3" y="226.5" font-size="13" font-weight="700">41.8 s<tspan class="t2" font-weight="400" font-size="12">  8.1× clip length</tspan></text>
+<line class="ref" x1="291.0" x2="291.0" y1="86" y2="238" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text class="t1" x="24" y="278" font-size="14" font-weight="700">768p, 10-second clip</text>
+<text class="t1" x="24" y="304" font-size="13" font-weight="600">RTX 5090<tspan class="t2" font-weight="400">  V1, 4-step</tspan></text><rect class="s1" x="274" y="290" width="157.6" height="20" rx="4"><title>RTX 5090, V1, 4-step: 48.0 s</title></rect><text class="t1" x="438.6" y="304.5" font-size="13" font-weight="700">48.0 s<tspan class="t2" font-weight="400" font-size="12">  4.7× clip length</tspan></text>
+<text class="t1" x="24" y="334" font-size="13" font-weight="600">RTX PRO 6000<tspan class="t2" font-weight="400">  V1, 4-step</tspan></text><rect class="s3" x="274" y="320" width="162.2" height="20" rx="4"><title>RTX PRO 6000, V1, 4-step: 49.4 s</title></rect><text class="t1" x="443.2" y="334.5" font-size="13" font-weight="700">49.4 s<tspan class="t2" font-weight="400" font-size="12">  4.9× clip length</tspan></text>
+<text class="t1" x="24" y="364" font-size="13" font-weight="600">RTX 5090<tspan class="t2" font-weight="400">  Pruned, 8-step</tspan></text><rect class="s1" x="274" y="350" width="264.4" height="20" rx="4"><title>RTX 5090, Pruned, 8-step: 80.5 s</title></rect><text class="t1" x="545.4" y="364.5" font-size="13" font-weight="700">80.5 s<tspan class="t2" font-weight="400" font-size="12">  8.0× clip length</tspan></text>
+<text class="t1" x="24" y="394" font-size="13" font-weight="600">RTX PRO 6000<tspan class="t2" font-weight="400">  Pruned, 8-step</tspan></text><rect class="s3" x="274" y="380" width="275.5" height="20" rx="4"><title>RTX PRO 6000, Pruned, 8-step: 83.9 s</title></rect><text class="t1" x="556.5" y="394.5" font-size="13" font-weight="700">83.9 s<tspan class="t2" font-weight="400" font-size="12">  8.3× clip length</tspan></text>
+<text class="t1" x="24" y="424" font-size="13" font-weight="600">RTX 5090<tspan class="t2" font-weight="400">  V2, 8-step</tspan></text><rect class="s1" x="274" y="410" width="295.9" height="20" rx="4"><title>RTX 5090, V2, 8-step: 90.1 s</title></rect><text class="t1" x="576.9" y="424.5" font-size="13" font-weight="700">90.1 s<tspan class="t2" font-weight="400" font-size="12">  8.9× clip length</tspan></text>
+<line class="ref" x1="307.3" x2="307.3" y1="284" y2="436" stroke-width="1.5" stroke-dasharray="4 3"/>
+</svg>
