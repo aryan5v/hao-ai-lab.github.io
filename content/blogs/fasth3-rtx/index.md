@@ -266,86 +266,13 @@ generator.generate_video(
 
 Swap in `FastVideo/FastVideo-FastH3-Trim-8-Step-NVFP4` for the faster experimental model.
 
-<div class="fasth3-rtx-todo"><b>TODO before publishing.</b> Link each repository to its Cookbook recipe.</div>
-
-## More samples
-
-Three more prompts on one RTX 5090, at the same settings as the gallery: 832×480, 5 s with audio, seed 1234. The left clip is FastH3 V2 and the right clip is FastH3 Trim.
-
-<div class="fasth3-rtx-gallery">
-  <div></div>
-  <div class="fasth3-rtx-colhead">FastH3 V2</div>
-  <div class="fasth3-rtx-colhead">FastH3 Trim</div>
-  <div class="fasth3-rtx-rowhead"><b>Street-food jingle</b><span>RTX 5090</span></div>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="rtx5090/v2-nvfp4-street-food-jingle.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 V2 on RTX 5090: Street-food jingle">
-        <source src="img/videos/rtx5090/v2-nvfp4-street-food-jingle.mp4#t=0.1" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>V2 · NVFP4</b><span>19.6 s</span></figcaption>
-  </figure>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="rtx5090/trim-nvfp4-street-food-jingle.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 Trim on RTX 5090: Street-food jingle">
-        <source src="img/videos/rtx5090/trim-nvfp4-street-food-jingle.mp4#t=0.1" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>Trim · NVFP4</b><span>19.1 s</span></figcaption>
-  </figure>
-  <div class="fasth3-rtx-rowhead"><b>Pirate and parrot</b><span>RTX 5090</span></div>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="rtx5090/v2-nvfp4-parrot-pirate.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 V2 on RTX 5090: Pirate and parrot">
-        <source src="img/videos/rtx5090/v2-nvfp4-parrot-pirate.mp4#t=0.1" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>V2 · NVFP4</b><span>19.6 s</span></figcaption>
-  </figure>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="rtx5090/trim-nvfp4-parrot-pirate.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 Trim on RTX 5090: Pirate and parrot">
-        <source src="img/videos/rtx5090/trim-nvfp4-parrot-pirate.mp4#t=0.1" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>Trim · NVFP4</b><span>19.1 s</span></figcaption>
-  </figure>
-  <div class="fasth3-rtx-rowhead"><b>Grandma DJ</b><span>RTX 5090</span></div>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="rtx5090/v2-nvfp4-grandma-dj.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 V2 on RTX 5090: Grandma DJ">
-        <source src="img/videos/rtx5090/v2-nvfp4-grandma-dj.mp4#t=0.1" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>V2 · NVFP4</b><span>19.6 s</span></figcaption>
-  </figure>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="rtx5090/trim-nvfp4-grandma-dj.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 Trim on RTX 5090: Grandma DJ">
-        <source src="img/videos/rtx5090/trim-nvfp4-grandma-dj.mp4#t=0.1" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>Trim · NVFP4</b><span>19.1 s</span></figcaption>
-  </figure>
-</div>
-
-<details>
-<summary>Full prompts</summary>
-<ul>
-<li><b>Weather corgi.</b> Live-action TV news parody, 16:9, bright studio lighting, 35mm lens, locked-off medium shot. A fluffy tan-and-white corgi with a tiny red bow tie sits upright behind a glossy news desk, a weather map of puffy clouds glowing on the screen behind it. [0-2 s] The corgi looks straight into the camera, ears perked, and says in a cheerful deep announcer voice, &quot;Tomorrow: one hundred percent chance of zoomies.&quot; [2-5 s] It tilts its head, its tongue flops out, and it gives one proud little bark as a short brassy news jingle plays. Sound: crisp studio voice, the jingle, the single bark. Only one corgi. No subtitles, no on-screen text, no watermark, no extra animals.</li>
-<li><b>Street-food jingle.</b> Documentary-style phone video, 16:9, sunny afternoon, phone held still at chest height. A cheerful street-food vendor in a green apron and white bandana stands behind a stall of golden fried snacks. [0-2 s] She smiles at the camera and claps her hands twice to set a rhythm, swaying gently. [2-5 s] She sings a bouncy jingle, &quot;Crispy, crunchy, ready to munch!&quot;, and finishes with a wink and a thumbs-up. Sound: her clear singing voice in a playful melody, two claps, sizzling oil and a soft market murmur. One vendor in focus, hands empty. No subtitles, no text, no watermark.</li>
-<li><b>Pirate and parrot.</b> Cinematic live-action, 16:9, golden hour on the deck of a wooden pirate ship, 50mm lens, locked-off medium shot. A weathered pirate captain with a braided beard, red bandana and long coat holds a rolled treasure map; a bright green parrot sits still on his shoulder. [0-2 s] He taps the map and declares in a gravelly voice, &quot;X marks the spot!&quot; [2-5 s] The parrot bobs its head and squawks back, &quot;Spot! Spot!&quot;, and the captain slowly turns to give it a tired look. Sound: his gravelly voice, the parrot&#x27;s squawk, creaking wood and soft waves. One captain and one parrot. No subtitles, no text, no watermark.</li>
-<li><b>Grandma DJ.</b> Cinematic live-action, 16:9, rooftop at night with neon pink and blue lights, 35mm lens, slow push-in. A grandmother with silver hair in a bun, round glasses and a sequined cardigan stands alone behind DJ turntables wearing big headphones. [0-2 s] She nods to a hip-hop beat and gives the vinyl a short, confident scratch. [2-5 s] She raises one hand, grins at the camera and the bass drops. Sound: record scratch, a punchy hip-hop beat with a heavy bass drop, a faint city hum. Only the grandmother, no crowd. No subtitles, no text, no watermark.</li>
-</ul>
-</details>
-
 ## Acknowledgements
 
 FastH3 builds on [MiniMax H3](https://huggingface.co/MiniMaxAI/MiniMax-H3), and we thank the MiniMax team for releasing its weights and code.
 
 The lightweight decoder is the [LynnReal Lightweight Video VAE](https://huggingface.co/stdstu123/LynnReal-Onmi-light-vae) ([paper](https://arxiv.org/abs/2609.15863), [code](https://github.com/LynnReal-AI/LynnReal-Omni)), loaded with the INT8 weights from [Kijai](https://huggingface.co/Kijai)'s [MiniMax-H3-experimental](https://huggingface.co/Kijai/MiniMax-H3-experimental). We thank both.
 
-We thank the NVIDIA Enterprise Products team (Pengcheng Li and Cliff Woolley) for the Video Sparse Attention kernel, and the FlashInfer and NVIDIA Model Optimizer teams for the FP4 kernels and calibration tools. The FP4 sparse attention on RTX GPUs builds on [SageAttention](https://github.com/thu-ml/SageAttention), and Ollin Boer Bohan's [TAEH3](https://github.com/madebyollin/taehv) is the fast preview decoder.
+We thank the NVIDIA Enterprise Products team (Pengcheng Li and Cliff Woolley) for the Video Sparse Attention kernel, and the FlashInfer and NVIDIA Model Optimizer teams for the FP4 kernels and calibration tools. The FP4 sparse attention on RTX GPUs builds on [SageAttention](https://github.com/thu-ml/SageAttention).
 
 The FastVideo team worked closely with [Nuva Lab](https://nuvalab.ai/), [NVIDIA FastGen](https://github.com/NVlabs/FastGen) (Julius Berner, Chao Liu, Arash Vahdat) and the NVIDIA Enterprise Products team on [FastH3](/blogs/fasth3-preview/). We also thank the [vLLM project](https://vllm.ai/), [NVIDIA](https://www.nvidia.com/en-us/) and [MBZUAI](https://mbzuai.ac.ae/) for their continued sponsorship and support of FastVideo.
 
@@ -364,6 +291,61 @@ The FastVideo team worked closely with [Nuva Lab](https://nuvalab.ai/), [NVIDIA 
 <a href="https://www.linkedin.com/in/haozhangml" aria-label="Hao Zhang LinkedIn"><i class="fab fa-linkedin"></i></a>
 <a href="https://x.com/haozhangml" aria-label="Hao Zhang X"><i class="fab fa-x-twitter"></i></a>
 
+## More samples
+
+FastH3 V2 (top) and FastH3 Trim (bottom) on one RTX 5090, 832×480, 5 s with audio.
+
+<div class="fasth3-rtx-more">
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="rtx5090/v2-nvfp4-street-food-jingle.mp4">
+      <video controls playsinline preload="metadata" aria-label="FastH3 V2 on RTX 5090: Street-food jingle">
+        <source src="img/videos/rtx5090/v2-nvfp4-street-food-jingle.mp4#t=0.1" type="video/mp4">
+      </video>
+    </div>
+    <figcaption>V2 · Street-food jingle</figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="rtx5090/v2-nvfp4-parrot-pirate.mp4">
+      <video controls playsinline preload="metadata" aria-label="FastH3 V2 on RTX 5090: Pirate and parrot">
+        <source src="img/videos/rtx5090/v2-nvfp4-parrot-pirate.mp4#t=0.1" type="video/mp4">
+      </video>
+    </div>
+    <figcaption>V2 · Pirate and parrot</figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="rtx5090/v2-nvfp4-grandma-dj.mp4">
+      <video controls playsinline preload="metadata" aria-label="FastH3 V2 on RTX 5090: Grandma DJ">
+        <source src="img/videos/rtx5090/v2-nvfp4-grandma-dj.mp4#t=0.1" type="video/mp4">
+      </video>
+    </div>
+    <figcaption>V2 · Grandma DJ</figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="rtx5090/trim-nvfp4-street-food-jingle.mp4">
+      <video controls playsinline preload="metadata" aria-label="FastH3 Trim on RTX 5090: Street-food jingle">
+        <source src="img/videos/rtx5090/trim-nvfp4-street-food-jingle.mp4#t=0.1" type="video/mp4">
+      </video>
+    </div>
+    <figcaption>Trim · Street-food jingle</figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="rtx5090/trim-nvfp4-parrot-pirate.mp4">
+      <video controls playsinline preload="metadata" aria-label="FastH3 Trim on RTX 5090: Pirate and parrot">
+        <source src="img/videos/rtx5090/trim-nvfp4-parrot-pirate.mp4#t=0.1" type="video/mp4">
+      </video>
+    </div>
+    <figcaption>Trim · Pirate and parrot</figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="rtx5090/trim-nvfp4-grandma-dj.mp4">
+      <video controls playsinline preload="metadata" aria-label="FastH3 Trim on RTX 5090: Grandma DJ">
+        <source src="img/videos/rtx5090/trim-nvfp4-grandma-dj.mp4#t=0.1" type="video/mp4">
+      </video>
+    </div>
+    <figcaption>Trim · Grandma DJ</figcaption>
+  </figure>
+</div>
+
 <style>
 .fasth3-rtx-article .fasth3-rtx-todo {
   margin: 1.4rem 0;
@@ -373,6 +355,21 @@ The FastVideo team worked closely with [Nuva Lab](https://nuvalab.ai/), [NVIDIA 
   background: rgba(235, 104, 52, 0.07);
   font-size: 0.9rem;
   line-height: 1.5;
+}
+
+.fasth3-rtx-article .fasth3-rtx-more {
+  display: grid;
+  max-width: 640px;
+  margin: 0.8rem 0 1.4rem;
+  gap: 0.6rem 0.5rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.fasth3-rtx-article .fasth3-rtx-more figcaption {
+  margin: 0.25rem 0 0;
+  color: var(--secondary);
+  font-size: 0.72rem;
+  line-height: 1.3;
 }
 
 .fasth3-rtx-article .fasth3-rtx-grid {
