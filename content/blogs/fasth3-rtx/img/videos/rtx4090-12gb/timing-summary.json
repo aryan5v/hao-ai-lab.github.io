@@ -12,6 +12,7 @@
       "width": 832,
       "height": 480,
       "mean_e2e_s": 74.07,
+      "median_e2e_s": 74.705,
       "sample_count": 4,
       "runs_s": [
         74.2,
@@ -27,6 +28,7 @@
       "width": 1344,
       "height": 768,
       "mean_e2e_s": 147.093,
+      "median_e2e_s": 146.885,
       "sample_count": 4,
       "runs_s": [
         147.79,
@@ -42,6 +44,7 @@
       "width": 832,
       "height": 480,
       "mean_e2e_s": 91.172,
+      "median_e2e_s": 91.15,
       "sample_count": 4,
       "runs_s": [
         92.53,
@@ -57,6 +60,7 @@
       "width": 1344,
       "height": 768,
       "mean_e2e_s": 170.695,
+      "median_e2e_s": 170.535,
       "sample_count": 4,
       "runs_s": [
         173.98,
