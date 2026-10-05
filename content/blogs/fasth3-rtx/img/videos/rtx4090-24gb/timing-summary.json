@@ -41,15 +41,16 @@
       "model": "v2-fp8",
       "width": 832,
       "height": 480,
-      "mean_e2e_s": 51.93,
-      "sample_count": 3,
+      "mean_e2e_s": 54.56,
+      "sample_count": 4,
       "runs_s": [
-        51.68,
-        51.07,
-        53.04
+        51.6,
+        51.73,
+        63.23,
+        51.68
       ],
-      "protocol": "three final showcase prompts after the first corgi request",
-      "status": "preliminary; standard benchmark pending"
+      "protocol": "ceramics and harbor, twice each after one warmup",
+      "status": "verified"
     }
   ]
 }
