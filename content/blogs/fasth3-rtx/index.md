@@ -145,10 +145,10 @@ We report two numbers per machine: a 5 s clip at 832×480 and a 5 s clip at 1344
 | 4× GB200 | data-center reference | — | 4.3 s | — | — |
 | RTX PRO 6000 | 96 GB | — | 12.2 s | — | 32.5 s |
 | RTX 5090 | 32 GB | — | 17.4 s | — | — |
-| RTX 4090 | 24 GB | — | 41.8 s | — | — |
+| RTX 4090 | 24 GB | — | 156.6 s | — | — |
 | RTX 4090, 16 GB limit | 16 GB | — | — | — | — |
 | RTX 4090, 12 GB limit | 12 GB | — | — | — | — |
-| DGX Spark | 128 GB unified | 141.4 s | 124.1 s | — | — |
+| DGX Spark | 128 GB unified | 141.4 s | 125.8 s | — | — |
 | 2× DGX Spark | 128 GB each | 87.2 s | 78.3 s | — | — |
 | Mac, M4 Max | 36 GB unified | — | — | — | — |
 <!-- results-table:end -->
