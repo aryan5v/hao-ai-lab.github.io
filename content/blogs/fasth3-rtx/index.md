@@ -1,5 +1,5 @@
 +++
-title = "FastH3 Trim: Video and Audio Generation on the RTX 5090, RTX 4090, DGX Spark and Mac"
+title = "FastH3 Trim: Video and Audio Generation on One Consumer GPU"
 date = 2026-10-05T00:00:00-07:00
 url = "/blogs/fasth3-rtx/"
 authors = ["FastVideo Team"]
@@ -15,394 +15,189 @@ contentClass = "fasth3-rtx-article"
       name = "github"
       url = "https://github.com/hao-ai-lab/FastVideo"
 [cover]
-    image = "img/cover.png"
-    alt = "FastH3 generating video with audio on an RTX 5090"
-    caption = "FastH3 on consumer GPUs"
+    image = "img/cover.jpg"
+    alt = "Blueprint drawings of a DGX Spark, a Mac Studio, an RTX 4090 and an RTX 5090"
+    caption = "FastH3 Trim"
     hidden = true
 +++
 
-<div class="fasth3-rtx-todo"><b>TODO (cover + hero video).</b> One 10 s, 1344×768 clip with audio generated on a single RTX 5090, with the wall clock burned into the corner. Cover image is a still from it.</div>
+{{< image src="img/cover.jpg" alt="Blueprint drawings of a DGX Spark, a Mac Studio, an RTX 4090 and an RTX 5090" width="100%" >}}
 
 {{< socialBadges github="hao-ai-lab/FastVideo" slack="https://join.slack.com/t/fastvideo/shared_invite/zt-3f4lao1uq-u~Ipx6Lt4J27AlD2y~IdLQ" huggingface="https://huggingface.co/collections/FastVideo/fastvideo-fasth3" >}}
 
-## **TL;DR:**
+FastH3 V2 generates video with synchronized audio in eight steps, but its weights take 138 GiB, more than four times the memory of the largest consumer GPU. This post continues [FastH3 Goes Local](/blogs/fasth3-local/), which brought FastH3 to the DGX Spark and the Mac and named the RTX family as the next target. Today we release **FastH3 Trim**, a smaller version of FastH3 that runs on one RTX 5090, one RTX 4090, a DGX Spark or a Mac. It removes 8 of the 50 transformer blocks, compresses the timestep conditioning, and stores the remaining weights in 4 or 8 bits.
 
-- **One RTX 5090 generates a 5 s, 832×480 clip with synchronized audio in 17.4 s with FastH3 Trim.** A 10 s, 1344×768 clip takes 80.5 s. Four GB200s, our data-center baseline, take 4.3 s and 20.6 s. We measure each time from prompt submission to the finished MP4.
-- **FastH3 Trim is a new model.** It keeps 42 of the 50 H3 transformer blocks, uses rank-16 timestep conditioning, and samples in 8 distilled steps. In NVFP4, its transformer is 11.1 GiB. The BF16 H3 transformer is 65.3 GiB.
-- **The full model is 4.2× smaller.** FastH3 Trim with an NVFP4 text encoder and a lightweight VAE is 33.0 GiB. BF16 H3 is 137.7 GiB. This reduction lets one consumer GPU hold the model.
-- **All FP4 layers use calibrated activation scales.** In 40 of 42 blocks, one MLP layer receives inputs larger than the maximum value of an uncalibrated FP4 activation. We measured the activation range of each layer over 1,000 prompts and all denoising steps. The checkpoint contains these scales.
-- **The RTX 4090 and GPUs with less memory use FP8.** One RTX 4090 generates a 5 s, 480p clip in 41.8 s. With the allocator limited to 16 GB or 12 GB, a 10 s, 480p clip also completes.
+FastH3 Trim is our first step toward smaller FastH3 models. Removing blocks makes the model faster and smaller, but it also costs some quality, and we explain that trade-off below.
 
-This post continues [FastH3 Goes Local](/blogs/fasth3-local/), which identified the RTX family as the next CUDA target. FastH3 builds on [MiniMax H3](https://huggingface.co/MiniMaxAI/MiniMax-H3). We thank the MiniMax team for releasing its weights and code.
+## TL;DR
 
-## Five models, one prompt
+- **One RTX 5090 generates a 5 s, 832×480 clip with audio in 17.4 s**, and a 10 s, 1344×768 clip in 80.5 s. Each time runs from prompt submission to the finished MP4.
+- **The release is 4.2× smaller than H3.** With the NVFP4 transformer and text encoder and a lightweight VAE, FastH3 Trim is 33.0 GiB, against 137.7 GiB for BF16 H3.
+- **The same model runs across consumer hardware.** NVFP4 on Blackwell GPUs and DGX Spark, FP8 on the RTX 4090 and on GPUs with 16 GB or 12 GB of memory, and INT6 on Apple Silicon.
+- **Pruning trades some quality for size and speed.** FastH3 V2 remains the quality reference. FastH3 Trim is the fast option, and we plan to improve it and to make it smaller.
 
-Each column is one model and format. Each row uses the same prompt and seed. All clips are 832×480, 5 s, with audio. Turn the audio on.
+## See it run
 
-<div class="fasth3-rtx-scroll">
-<div class="fasth3-rtx-grid fasth3-rtx-grid--models">
-  <div></div>
-  <div class="fasth3-rtx-colhead"><b>FastH3 V2</b><span>BF16 · 4× GB200</span></div>
-  <div class="fasth3-rtx-colhead"><b>FastH3 V2</b><span>NVFP4 · RTX 5090</span></div>
-  <div class="fasth3-rtx-colhead"><b>FastH3 Trim</b><span>NVFP4 · RTX 5090</span></div>
-  <div class="fasth3-rtx-colhead"><b>FastH3 Trim</b><span>MLX INT6 · M4 Max</span></div>
-  <div class="fasth3-rtx-colhead"><b>FastH3 Trim</b><span>FP8 · RTX 4090</span></div>
-  <div class="fasth3-rtx-rowhead">Ceramics</div>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="models/ceramics-v2-bf16.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 V2, BF16 · 4× GB200, Ceramics">
-        <source src="img/videos/models/ceramics-v2-bf16.mp4" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>FastH3 V2</b><span>— s</span></figcaption>
-  </figure>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="models/ceramics-v2-nvfp4.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 V2, NVFP4 · RTX 5090, Ceramics">
-        <source src="img/videos/models/ceramics-v2-nvfp4.mp4" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>FastH3 V2</b><span>— s</span></figcaption>
-  </figure>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="models/ceramics-trim-nvfp4.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 Trim, NVFP4 · RTX 5090, Ceramics">
-        <source src="img/videos/models/ceramics-trim-nvfp4.mp4" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>FastH3 Trim</b><span>— s</span></figcaption>
-  </figure>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="models/ceramics-trim-int6.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 Trim, MLX INT6 · M4 Max, Ceramics">
-        <source src="img/videos/models/ceramics-trim-int6.mp4" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>FastH3 Trim</b><span>— s</span></figcaption>
-  </figure>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="models/ceramics-trim-fp8.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 Trim, FP8 · RTX 4090, Ceramics">
-        <source src="img/videos/models/ceramics-trim-fp8.mp4" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>FastH3 Trim</b><span>— s</span></figcaption>
-  </figure>
-  <div class="fasth3-rtx-rowhead">Harbor</div>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="models/harbor-v2-bf16.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 V2, BF16 · 4× GB200, Harbor">
-        <source src="img/videos/models/harbor-v2-bf16.mp4" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>FastH3 V2</b><span>— s</span></figcaption>
-  </figure>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="models/harbor-v2-nvfp4.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 V2, NVFP4 · RTX 5090, Harbor">
-        <source src="img/videos/models/harbor-v2-nvfp4.mp4" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>FastH3 V2</b><span>— s</span></figcaption>
-  </figure>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="models/harbor-trim-nvfp4.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 Trim, NVFP4 · RTX 5090, Harbor">
-        <source src="img/videos/models/harbor-trim-nvfp4.mp4" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>FastH3 Trim</b><span>— s</span></figcaption>
-  </figure>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="models/harbor-trim-int6.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 Trim, MLX INT6 · M4 Max, Harbor">
-        <source src="img/videos/models/harbor-trim-int6.mp4" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>FastH3 Trim</b><span>— s</span></figcaption>
-  </figure>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="models/harbor-trim-fp8.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 Trim, FP8 · RTX 4090, Harbor">
-        <source src="img/videos/models/harbor-trim-fp8.mp4" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>FastH3 Trim</b><span>— s</span></figcaption>
-  </figure>
-  <div class="fasth3-rtx-rowhead">Action</div>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="models/action-v2-bf16.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 V2, BF16 · 4× GB200, Action">
-        <source src="img/videos/models/action-v2-bf16.mp4" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>FastH3 V2</b><span>— s</span></figcaption>
-  </figure>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="models/action-v2-nvfp4.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 V2, NVFP4 · RTX 5090, Action">
-        <source src="img/videos/models/action-v2-nvfp4.mp4" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>FastH3 V2</b><span>— s</span></figcaption>
-  </figure>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="models/action-trim-nvfp4.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 Trim, NVFP4 · RTX 5090, Action">
-        <source src="img/videos/models/action-trim-nvfp4.mp4" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>FastH3 Trim</b><span>— s</span></figcaption>
-  </figure>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="models/action-trim-int6.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 Trim, MLX INT6 · M4 Max, Action">
-        <source src="img/videos/models/action-trim-int6.mp4" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>FastH3 Trim</b><span>— s</span></figcaption>
-  </figure>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="models/action-trim-fp8.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 Trim, FP8 · RTX 4090, Action">
-        <source src="img/videos/models/action-trim-fp8.mp4" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>FastH3 Trim</b><span>— s</span></figcaption>
-  </figure>
-</div>
-</div>
+<figure class="fasth3-rtx-clip fasth3-rtx-hero">
+  <div class="fasth3-rtx-frame fasth3-rtx-frame--wide" data-file="hero-rtx5090.mp4">
+    <video controls playsinline preload="metadata" aria-label="FastH3 Trim on one RTX 5090, 10 s at 1344×768 with audio">
+      <source src="img/videos/hero-rtx5090.mp4" type="video/mp4">
+    </video>
+  </div>
+  <figcaption><b>One RTX 5090</b><span>FastH3 Trim, NVFP4 · 1344×768, 10 s, with audio · — s from prompt to MP4</span></figcaption>
+</figure>
 
-<div class="fasth3-rtx-todo"><b>TODO (clips).</b> Fill <code>img/videos/models/&lt;prompt&gt;-&lt;model&gt;.mp4</code> for the prompts <code>latency-ceramics-005</code>, <code>latency-harbor-005</code> and one action prompt, with the shipping checkpoint. Replace each "— s" with that clip's end-to-end time.</div>
-
-## The same clip on every machine
-
-<div class="fasth3-rtx-grid fasth3-rtx-grid--devices">
+<div class="fasth3-rtx-grid">
   <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="devices/ceramics-gb200x4.mp4">
-      <video controls playsinline preload="metadata" aria-label="4× GB200, ceramics">
-        <source src="img/videos/devices/ceramics-gb200x4.mp4" type="video/mp4">
+    <div class="fasth3-rtx-frame" data-file="ceramics-rtx5090.mp4">
+      <video controls playsinline preload="metadata" aria-label="FastH3 Trim on one RTX 5090, ceramics">
+        <source src="img/videos/ceramics-rtx5090.mp4" type="video/mp4">
       </video>
     </div>
-    <figcaption><b>4× GB200</b><span>baseline · NVFP4 · 4.3 s</span></figcaption>
+    <figcaption><b>Ceramics</b><span>RTX 5090 · 832×480, 5 s · — s</span></figcaption>
   </figure>
   <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="devices/ceramics-pro6000.mp4">
-      <video controls playsinline preload="metadata" aria-label="RTX PRO 6000, ceramics">
-        <source src="img/videos/devices/ceramics-pro6000.mp4" type="video/mp4">
+    <div class="fasth3-rtx-frame" data-file="harbor-rtx5090.mp4">
+      <video controls playsinline preload="metadata" aria-label="FastH3 Trim on one RTX 5090, harbor">
+        <source src="img/videos/harbor-rtx5090.mp4" type="video/mp4">
       </video>
     </div>
-    <figcaption><b>RTX PRO 6000</b><span>96 GB · NVFP4 · 15.1 s</span></figcaption>
+    <figcaption><b>Harbor</b><span>RTX 5090 · 832×480, 5 s · — s</span></figcaption>
   </figure>
   <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="devices/ceramics-rtx5090.mp4">
-      <video controls playsinline preload="metadata" aria-label="RTX 5090, ceramics">
-        <source src="img/videos/devices/ceramics-rtx5090.mp4" type="video/mp4">
+    <div class="fasth3-rtx-frame" data-file="action-rtx5090.mp4">
+      <video controls playsinline preload="metadata" aria-label="FastH3 Trim on one RTX 5090, action">
+        <source src="img/videos/action-rtx5090.mp4" type="video/mp4">
       </video>
     </div>
-    <figcaption><b>RTX 5090</b><span>32 GB · NVFP4 · 17.4 s</span></figcaption>
-  </figure>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="devices/ceramics-rtx4090.mp4">
-      <video controls playsinline preload="metadata" aria-label="RTX 4090, ceramics">
-        <source src="img/videos/devices/ceramics-rtx4090.mp4" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>RTX 4090</b><span>24 GB · FP8 · 41.8 s</span></figcaption>
-  </figure>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="devices/ceramics-rtx4090-16gb.mp4">
-      <video controls playsinline preload="metadata" aria-label="RTX 4090, 16 GB cap, ceramics">
-        <source src="img/videos/devices/ceramics-rtx4090-16gb.mp4" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>RTX 4090, 16 GB cap</b><span>FP8 · 10 s clip · 104.0 s</span></figcaption>
-  </figure>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="devices/ceramics-rtx4090-12gb.mp4">
-      <video controls playsinline preload="metadata" aria-label="RTX 4090, 12 GB cap, ceramics">
-        <source src="img/videos/devices/ceramics-rtx4090-12gb.mp4" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>RTX 4090, 12 GB cap</b><span>FP8 · 10 s clip · 107.3 s</span></figcaption>
-  </figure>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="devices/ceramics-spark.mp4">
-      <video controls playsinline preload="metadata" aria-label="DGX Spark, ceramics">
-        <source src="img/videos/devices/ceramics-spark.mp4" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>DGX Spark</b><span>128 GB unified · NVFP4 · 134.5 s</span></figcaption>
-  </figure>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="devices/ceramics-m4max.mp4">
-      <video controls playsinline preload="metadata" aria-label="M4 Max, ceramics">
-        <source src="img/videos/devices/ceramics-m4max.mp4" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>M4 Max</b><span>36 GB unified · MLX INT6 · pending</span></figcaption>
+    <figcaption><b>Action</b><span>RTX 5090 · 832×480, 5 s · — s</span></figcaption>
   </figure>
 </div>
 
-<div class="fasth3-rtx-todo"><b>TODO (clips).</b> Fill <code>img/videos/devices/ceramics-&lt;device&gt;.mp4</code> from the benchmark runs. The 4090 memory-cap clips are 10 s; all others are 5 s.</div>
+<div class="fasth3-rtx-todo"><b>TODO (clips).</b> Add <code>img/videos/hero-rtx5090.mp4</code> (10 s, 1344×768) and the three 5 s clips <code>ceramics-</code>, <code>harbor-</code> and <code>action-rtx5090.mp4</code> (prompts <code>latency-ceramics-005</code>, <code>latency-harbor-005</code> and one action prompt). Replace each "— s" with the clip's end-to-end time. Turn the audio on.</div>
 
-## Benchmark results
+## How fast is it
 
-All times in this post are **end-to-end** times. The measurement starts when the prompt is submitted. It stops when the MP4 file with video and audio is written. Each time includes:
+All times in this post are end to end. Each one starts when we submit the prompt and stops when the MP4 file with video and audio is written, so it includes text encoding, all eight denoising steps, video and audio decoding, and the MP4 export. The server is warm: one untimed request compiles the model first. We then run each of two benchmark prompts twice and report the median.
 
-- text encoding,
-- all denoising steps,
-- video and audio decoding,
-- MP4 export.
+{{< image src="img/fig_e2e.svg" alt="Thin horizontal bars of end-to-end seconds on a log scale, FastH3 Trim unless noted. 832×480, 5 s: 4× GB200 baseline 4.3, RTX PRO 6000 15.1, RTX 5090 17.4, RTX 4090 FP8 41.8, two DGX Sparks 78.3, one DGX Spark 134.5, M4 Max pending. 832×480, 10 s: RTX 4090 79.7, 4090 with a 16 GB cap 104.0, with a 12 GB cap 107.3, two Sparks 164.5, one Spark 277.3. 1344×768, 10 s: 4× GB200 20.6, RTX 5090 80.5, RTX PRO 6000 83.9, RTX 5090 FastH3 V2 90.1, RTX 4090 pending. A dashed line marks each clip's own length." width="100%" title="Figure 1. End-to-end time per clip, FastH3 Trim unless noted. Four GB200s are the data-center baseline; every other row is one machine. The dashed line is the length of the clip itself." >}}
 
-The server is warm. One untimed generation completes compilation first. Then each of the two benchmark prompts runs two times, and we report the median of these four runs. No frames are dropped, and no preview decoder is used.
+On a 5090, FastH3 Trim generates the 10 s, 768p clip in 80.5 s. The full FastH3 V2 takes 90.1 s on the same GPU. Most of the speed on consumer GPUs comes from the model being small enough to stay in GPU memory, which the next section explains.
 
-We use three clip settings, all at 24 fps: 832×480 for 5 s (124 frames) and 10 s (243 frames), and 1344×768 for 10 s (243 frames). Four GB200s are the data-center baseline. Every other row is a single machine.
+<div class="fasth3-rtx-todo"><b>TODO (numbers).</b> Re-measure the RTX 4090 at 1344×768, 10 s (the last run, 279.9 s, predates the current kernels). Re-run the RTX PRO 6000 with the all-layer NVFP4 export. Add the M4 Max INT6 row.</div>
 
-{{< image src="img/fig_e2e.svg" alt="Thin horizontal bars of end-to-end seconds on a log scale, FastH3 Trim 8-step unless noted. 832×480, 5 s: 4× GB200 baseline 4.3, RTX PRO 6000 15.1, RTX 5090 17.4, RTX 4090 FP8 41.8, two DGX Sparks 78.3, one DGX Spark 134.5, M4 Max pending. 832×480, 10 s: RTX 4090 79.7, 4090 with a 16 GB cap 104.0, with a 12 GB cap 107.3, two Sparks 164.5, one Spark 277.3. 1344×768, 10 s: 4× GB200 20.6, RTX 5090 80.5, RTX PRO 6000 83.9, RTX 5090 FastH3 V2 90.1, RTX 4090 pending. A dashed line marks each clip's own length." width="100%" title="Figure 1. End-to-end time per clip, FastH3 Trim 8-step unless noted. The dashed line is the length of the clip itself." >}}
+## Making H3 small enough for one GPU
 
-<div class="fasth3-rtx-todo"><b>TODO before publishing.</b> (1) 4090 at 768p, 10 s: the last verified run is 279.9 s, before the current kernels; re-measure. (2) RTX PRO 6000 rows use the MLP-only FP4 export; re-run with the full-FP4 export the 5090 uses. (4) Mac row from Track C.</div>
+H3 is three networks. A Qwen3-VL text encoder reads the prompt, a 50-block diffusion transformer (DiT) denoises the video and audio latents together, and two VAEs decode the latents into frames and sound. In BF16 these weights total 137.7 GiB, and a 32 GB RTX 5090 cannot hold even the DiT. We reduced each network separately.
 
-FastH3 Trim is the speed default. FastH3 V2 keeps all 50 blocks and is the quality reference; on a 5090 it takes 90.1 s for the 10 s, 768p clip, against 80.5 s for FastH3 Trim.
+{{< image src="img/fig_memory_stack.svg" alt="Stacked bars. BF16 H3: text encoder 62.1 GiB, DiT 65.3 GiB, VAEs 10.3 GiB, 137.7 GiB total. FastH3 Trim with NVFP4: text encoder 15.3, DiT 11.1, VAEs 6.5, 33.0 GiB total." width="100%" title="Figure 2. Checkpoint size by component. The FastH3 Trim NVFP4 release is 4.2× smaller than BF16 H3." >}}
 
-## Why H3 does not fit on one GPU
+- **Text encoder: 62.1 → 15.3 GiB.** H3 reads hidden state 50 of a 64-layer Qwen3-VL and never generates text, so we remove the last 14 layers and the language-model head without changing the features H3 uses. The remaining linear layers are stored in NVFP4.
+- **DiT: 65.3 → 11.1 GiB.** We remove 8 of the 50 blocks, replace each block's timestep projection with a rank-16 factorization, and store the attention, MLP and sparse-attention gate weights in NVFP4.
+- **VAEs: 10.3 → 6.5 GiB.** We decode video with the [LynnReal lightweight video VAE](https://huggingface.co/stdstu123/LynnReal-Onmi-light-vae), a distilled 26-block decoder with the same latent interface as the H3 VAE, loaded with [Kijai's INT8 weights](https://huggingface.co/Kijai/MiniMax-H3-experimental). It uses 2.3 GiB of GPU memory, and every device in this post uses the same one.
 
-H3 contains three networks:
+Size matters for speed. On a 32 GB GPU, the question is whether the DiT can stay in GPU memory between requests. When it can, each request only moves the text encoder in and out.
 
-- A Qwen3-VL text encoder reads the prompt.
-- A 50-block diffusion transformer (DiT) denoises the video and audio latents together.
-- Two VAEs decode the latents into frames and sound.
+## FastH3 Trim: removing blocks
 
-In BF16, these weights are 137.7 GiB. A 32 GB RTX 5090 cannot hold the DiT alone. We reduced the size of each network separately.
+Pruning is an experiment we plan to refine over time, and it is our path to even smaller models. It is also not free. We remove the blocks we measured as least important, but each block still holds part of what the model learned, so the pruned model loses some information and quality can drop. In return it gets both faster and smaller. FastH3 Trim is the first step, and more will follow.
 
-{{< image src="img/fig_memory_stack.svg" alt="Stacked bars. BF16 H3: text encoder 62.1 GiB, DiT 65.3 GiB, VAEs 10.3 GiB, 137.7 GiB total. FastH3 Trim with full NVFP4: text encoder 15.3, DiT 11.1, VAEs 6.5, 33.0 GiB total." width="100%" title="Figure 2. Checkpoint size by component. The FastH3 Trim NVFP4 release is 4.2× smaller than BF16 H3." >}}
-
-- **Text encoder: 62.1 → 15.3 GiB.** H3 reads hidden state 50 of a 64-layer Qwen3-VL and does not generate text. Thus we remove the last 14 layers and the language-model head. This removal does not change the features that H3 reads. We store the remaining linear layers in NVFP4.
-- **DiT: 65.3 → 11.1 GiB.** Pruning removes 8 of the 50 blocks. In each block, a rank-16 factorization replaces the full-rank timestep projection. NVFP4 then stores all attention, MLP and sparse-attention gate weights in 4 bits.
-- **VAE: 9.7 → 5.9 GiB.** We decode with the [LynnReal lightweight video VAE](https://huggingface.co/stdstu123/LynnReal-Onmi-light-vae), a distilled 26-block decoder with the same latent interface as the H3 VAE. We load it with [Kijai's INT8 weights](https://huggingface.co/Kijai/MiniMax-H3-experimental). In GPU memory, it uses 2.3 GiB.
-
-The smaller size also gives most of the speed increase. On a 32 GB GPU, the important condition is whether the DiT stays in GPU memory between requests. If it does, each request moves only the text encoder into and out of GPU memory.
-
-## FastH3 Trim
-
-FastH3 Trim keeps 42 of the 50 H3 transformer blocks. It removes blocks 6, 7, 9, 13, 15, 16, 22 and 23.
-
-{{< image src="img/fig_squares.svg" alt="Squares drawn to scale, area equal to transformer checkpoint size. H3 BF16, 65.3 GiB, is tiled with blocks 0 to 49; blocks 6, 7, 9, 13, 15, 16, 22 and 23 are red (removed), and blocks 0, 1, 5, 47, 48 and 49 are outlined as most sensitive. Arrows lead to smaller squares tiled with the same 42 kept blocks: Trim BF16 34.8 GiB (1.9× smaller), FP8 19.9 (3.3×), INT6 14.3 (4.6×), NVFP4 11.1 (5.9×)." width="100%" title="Figure 3. The transformer in each format we ship, drawn to scale: area is checkpoint size. Pruning removes eight blocks; the remaining 42 shrink as the bits per weight drop." >}}
+{{< image src="img/fig_squares.svg" alt="Squares drawn to scale, area equal to transformer checkpoint size. H3 BF16, 65.3 GiB, is tiled with blocks 0 to 49; blocks 6, 7, 9, 13, 15, 16, 22 and 23 are red (removed), and blocks 0, 1, 5, 47, 48 and 49 are outlined as most sensitive. Arrows lead to smaller squares tiled with the same 42 kept blocks: Trim BF16 34.8 GiB (1.9× smaller), FP8 19.9 (3.3×), INT6 14.3 (4.6×), NVFP4 11.1 (5.9×)." width="100%" title="Figure 3. The transformer in each format we ship, drawn to scale: area is checkpoint size. FastH3 Trim removes blocks 6, 7, 9, 13, 15, 16, 22 and 23; the remaining 42 shrink as the bits per weight drop." >}}
 
 ### Choosing the blocks
 
-Our first version compressed base H3 from 50 to 42 transformer blocks with activation-guided selection, which clearly beat removing blocks at uniform intervals. We reduced the AdaLN representation, recovered the pruned model with teacher guidance, and then used DMD to adapt it to fewer sampling steps. Quantization came last. We also tried quantization-aware distillation (QAD), but in our side-by-side comparisons the QAD variants were not better than post-training quantization. Motion coherence, fine detail and prompt adherence remained the main weaknesses.
+Our first pruned model chose blocks by their activations, which clearly beat removing blocks at even intervals. We recovered that model with teacher guidance and then used DMD to reduce its sampling steps. Motion coherence, fine detail and prompt adherence stayed weak. Quantization-aware distillation (QAD) did not beat post-training quantization in our side-by-side comparisons.
 
-For FastH3 Trim we changed how we select blocks. Starting from base H3, we skipped each block one at a time and measured how much the video and audio flow predictions changed. The screen used four examples (motion, speech, music and sound events) at three noise levels, which gives 600 block-removal measurements. We ranked the blocks by the largest change they caused in any of these conditions, so a block that matters for either video or audio is kept. This gave a different set of eight removed blocks from the activation-selected version.
+For FastH3 Trim we measured each block directly. Starting from base H3, we skipped one block at a time and recorded how much the video and audio predictions changed. We tested four examples (motion, speech, music and sound events) at three noise levels, for 600 measurements in total. Each block was ranked by the largest change it caused under any condition, so a block that matters to either video or audio is kept. The first and last blocks changed the output the most. The eight blocks we removed are all in the first half of the network.
+
+### Compressing the timestep conditioning
+
+H3 conditions each block on the diffusion timestep through an AdaLN projection, which maps a 2,688-dimensional time embedding to six modulation vectors. These projections take 24 GiB in BF16 across the 50 blocks. Their input, however, is a smooth function of a single number, the timestep, so it uses very few of its 2,688 dimensions. FastH3 Trim replaces the projections with one shared 2,688→16 basis and a small projection per block. We store the factorized weights in FP16, because BF16 gives about 1.7× larger reconstruction error.
 
 ### Training
 
-We started a new 42-block student with the rank-16 AdaLN described below. We then trained it directly with eight-step DMD2, using the training objective of FastH3 V2: base H3 initializes both the frozen teacher and the trainable critic, and attention is 80% sparse. This tests whether distribution matching can repair the damage from pruning while it also adapts the model to fewer steps and sparse attention. We chose checkpoint 300 by eye; later checkpoints added objects and lost consistency within the clip. Quantization comes after checkpoint selection. QAD stays an option if post-training quantization leaves a visible quality gap.
+We trained the new 42-block model directly with eight-step DMD2, using the FastH3 V2 objective. Base H3 initializes both the frozen teacher and the trainable critic, and attention is 80% sparse. The model samples at timesteps 999, 874, 749, 624, 500, 375, 250 and 125, and its sparse attention keeps 20% of the attention tiles.
 
+**We pick checkpoints by watching them.** Later checkpoints looked sharper but started to add objects partway through a clip, for example a second dragon in a sword-fight scene, and our automatic scorer did not notice. We release checkpoint 300, which held its scenes together best when we reviewed the held-out prompts by eye.
 
-H3 conditions each block on the diffusion timestep through an AdaLN projection. This projection maps a 2,688-dimensional time embedding to six modulation vectors. In BF16, these projections use 24 GiB across the 50 blocks. Their input is a smooth function of one scalar, the timestep. Thus the input uses very few of its 2,688 dimensions. FastH3 Trim replaces the projections with one shared 2,688→16 basis and a small projection per block. We store the factorized weights in FP16, because BF16 gives an approximately 1.7× larger reconstruction error.
+## Four-bit weights without clipping
 
-The student model is distilled to 8 steps with DMD2. It samples at timesteps 999, 874, 749, 624, 500, 375, 250 and 125. Video Sparse Attention (VSA) keeps 20% of the attention tiles.
+NVFP4 stores each group of 16 values as 4-bit floats with a shared 8-bit scale, plus one scale per tensor that sets the overall range. For weights, we compute that per-tensor scale from the weights themselves. For activations it must be fixed before the data arrives. The simplest choice, a unit scale, covers magnitudes up to 6 × 448 = 2,688, and H3 activations are much larger.
 
-**Checkpoint selection requires visual review.** We compared checkpoints on 36 held-out prompts with a fixed seed. A later checkpoint gave sharper output overall. However, in a sword-fight prompt, it added a second dragon halfway through the clip. Our automatic scorer did not detect this defect. We now review each candidate checkpoint on the full prompt set by eye.
+{{< image src="img/fig_fc_out_amax.svg" alt="Bar chart of the largest input to each block's MLP output projection across 42 blocks, on a log scale. 40 of 42 bars exceed the 2,688 line; block 37 reaches 368,640." width="100%" title="Figure 4. Largest input to each block's MLP output projection, over 1,000 calibration prompts and all eight steps. With a unit scale, everything above the dashed line is clipped." >}}
 
-<div class="fasth3-rtx-todo"><b>TODO (quality figure).</b> Side-by-side frames: BF16 Trim vs NVFP4 Trim vs FastH3 V2 on three prompts. Frame grids for BF16 vs MLP-only NVFP4 vs full NVFP4 already exist from the 36-prompt evaluation.</div>
+In 40 of the 42 blocks, the input to the MLP output projection exceeds 2,688. In block 37 it reaches 368,640, 137 times the limit, and a unit scale clips these values on every forward pass. So we calibrate: we ran 1,000 prompts through the full eight-step sampler, recorded the largest input to each linear layer, and stored one static scale per layer in the checkpoint. FastH3 Trim has 294 calibrated layers, covering the attention projections, the MLPs and the sparse-attention gate. This extends the FastH3 V2 NVFP4 recipe from the MLPs to every quantized layer.
 
-## Calibrated FP4 activation scales
+## Running on each machine
 
-NVFP4 stores each group of 16 values as 4-bit floating-point numbers with a shared 8-bit scale. A second, per-tensor scale sets the range. For weights, we calculate this second scale from the weights. For activations, we must set it before the data is available.
+### RTX 5090
 
-The simplest choice is a unit scale. A unit scale can represent magnitudes up to 6 × 448 = 2,688. H3 activations are much larger than this limit.
+Our first FP4 export quantized only the MLPs, the setting we use on data-center GPUs. On a 5090 that left a 20 GB DiT, because the BF16 attention projections alone take 9.7 GB, and the text encoder no longer fit beside it. Every request moved the DiT to host memory and back: a 480p clip took 26.4 s, and a 768p clip did not fit at all.
 
-{{< image src="img/fig_fc_out_amax.svg" alt="Bar chart of the largest input to each block's MLP output projection across 42 blocks, on a log scale. 40 of 42 bars exceed the 2,688 line; block 37 reaches 368,640." width="100%" title="Figure 4. Largest input to each block's MLP output projection, over 1,000 calibration prompts and all eight steps. With a unit scale, everything above the dashed line saturates." >}}
+With attention and the gate also in NVFP4, the DiT is 11.1 GiB and stays on the GPU. Only the 15.3 GiB text encoder moves per prompt. The same 480p clip takes 17.4 s, and the 10 s, 768p clip now fits and takes 80.5 s.
 
-The input to the MLP output projection is larger than 2,688 in 40 of 42 blocks. In block 37, it reaches 368,640, which is 137 times the limit. With a unit scale, these values are clipped on each forward pass.
+One detail cost us a crash first. Fast host-to-GPU copies need page-locked ("pinned") host memory, and PyTorch's pinned allocator rounds each block up to a power of two. For the H3 FP4 weight shapes, 2.87 GiB of tensors used 5.06 GiB of host RAM, enough to get the process killed in a 60 GB cloud container. We now pin one exact-size buffer per module with `cudaHostRegister` and place the tensors inside it, which brings the same tensors down to 2.90 GiB.
 
-Thus we calibrate the scales:
+### RTX 4090 and GPUs with less memory
 
-1. We ran 1,000 prompts through the full 8-step sampler.
-2. For each linear layer, we recorded the largest input value.
-3. We stored one static scale per layer in the checkpoint.
+The RTX 4090 has no FP4 tensor cores, so it uses FP8: 8-bit weights with one scale per output channel and 8-bit activations with one scale per token. PyTorch's FP8 matrix multiply with these scales runs at about 70 TFLOPS on a 4090, slower than BF16 at about 160 TFLOPS. The per-tensor FP8 kernel runs at 220–305 TFLOPS, so we call it with unit scales and apply both scale vectors to the output in one fused pass. The result matches per-token, per-channel scaling and costs 5–10% more than per-tensor scaling.
 
-FastH3 Trim has 294 calibrated linear layers: attention projections, MLPs and the sparse-attention gate. The same procedure gives 350 scales for the 4-step V1 checkpoint. This procedure extends the FastH3 V2 NVFP4 recipe from the MLPs to all quantized layers.
+Three more changes bring the 4090 to 41.8 s for a 5 s clip:
 
-<div class="fasth3-rtx-todo"><b>TODO (quality evidence).</b> Same-seed clips: BF16 vs NVFP4 (MLP only) vs NVFP4 (all layers) for FastH3 Trim and V1. The 36-prompt evaluation is done; pick three prompts with audio.</div>
+- **Sparse attention:** queries and keys are quantized to INT8 for the score computation, while values stay in BF16. The fine attention kernel runs 1.6× faster with about 0.6% relative error.
+- **Text encoder:** it streams to the GPU one layer at a time through exact-size pinned buffers, and one fused kernel expands its NVFP4 weights.
+- **VAE:** the same INT8 lightweight VAE as every other device, with a fused dequantization step and one shared quantized input for the Q, K and V projections. Decoded frames are bit-identical to the unoptimized path.
 
-## Fitting the DiT in a 32 GB RTX 5090
-
-Our first FastH3 Trim FP4 export quantized only the MLPs, which is our setting for data-center GPUs. On a 5090, this export gave a 20 GB DiT, because the BF16 attention projections alone are 9.7 GB. The text encoder did not fit in GPU memory together with this DiT. Thus each request moved the DiT to host memory and back. A 480p clip took 26.4 s, and a 768p clip did not fit.
-
-With attention and the gate also in NVFP4, the DiT is 11.1 GiB. The DiT now stays in GPU memory, and only the 15.3 GiB text encoder is loaded for each prompt. The same 480p clip takes 17.4 s. A 10 s, 768p generation also fits, and it takes 80.5 s. This time is shorter than the 90.1 s of the larger FastH3 V2 on the same GPU.
-
-**Pinned host memory can have a large overhead.** Fast transfers between host and GPU require page-locked ("pinned") host memory. The PyTorch pinned-memory allocator rounds each block up to a power of two. For the H3 FP4 weight shapes, 2.87 GiB of tensors used 5.06 GiB of host RAM. In a 60 GB cloud container, this overhead caused the operating system to stop the process. We now pin one buffer of the exact size per module with `cudaHostRegister`, and we place the tensors in that buffer. The same 2.87 GiB of tensors now uses 2.90 GiB.
-
-## RTX 4090 and GPUs with less memory
-
-The RTX 4090 does not have FP4 tensor cores. Thus it uses FP8: 8-bit weights with one scale per output channel, and 8-bit activations with one scale per token.
-
-**The default FP8 path is slower than BF16 on this GPU.** On a 4090, the PyTorch FP8 matrix multiply with per-token and per-channel scales runs at approximately 70 TFLOPS. BF16 runs at approximately 160 TFLOPS, and the per-tensor FP8 kernel runs at 220–305 TFLOPS. We use the per-tensor kernel with unit scales. Then one fused pass applies both scale vectors to the output. The result is the same as per-token, per-channel scaling, at a cost of 5–10% more than per-tensor scaling.
-
-Every GPU decodes with the same lightweight VAE and the same INT8 weights. On the 4090 we only made its INT8 matrix multiplies faster: one fused pass dequantizes the output, and the Q, K and V projections share one quantized input. The decoded frames are identical to the unoptimized path.
-
-<div class="fasth3-rtx-todo"><b>TODO (4090 write-up, from PR #46).</b> INT8 QK / BF16 PV sparse attention on sm89, and layer-by-layer streaming of the NVFP4 text encoder with fused dequantization. The 4090 time split is in Figure 5.</div>
-
-| RTX 4090, FastH3 Trim, FP8 | 832×480, 124 frames | 832×480, 243 frames |
+| RTX 4090, FastH3 Trim, FP8 | 832×480, 5 s | 832×480, 10 s |
 |---|---:|---:|
 | 24 GB (full GPU) | 41.8 s | 79.7 s |
 | Limited to 16 GB | — | 104.0 s |
 | Limited to 12 GB | — | 107.3 s |
 
-For the 16 GB and 12 GB rows, we limit the PyTorch allocator on the same 4090. These rows show that the model fits in that amount of GPU memory. A real 16 GB GPU is slower.
+For the 16 GB and 12 GB rows, we cap the PyTorch allocator on the same 4090. They show that the model fits in that much memory; a real 16 GB GPU will be slower.
 
-<div class="fasth3-rtx-todo"><b>TODO.</b> 8 GB attempt, minimum system RAM per tier, RTX 30-series (FP8 weights with BF16 compute).</div>
+### DGX Spark and Apple Silicon
 
-## DGX Spark and Apple Silicon
+A DGX Spark keeps the text encoder, the DiT and both VAEs in its 128 GB of unified memory, so nothing moves between requests. It uses the same NVFP4 checkpoints and lightweight VAE as the 5090, and two Sparks split each request with sequence parallelism.
 
-On a DGX Spark, the text encoder, the DiT and both VAEs stay in the 128 GB of unified memory. Nothing moves between requests. We use the same NVFP4 checkpoints and the light VAE as on the RTX 5090. Two Sparks split each request with sequence parallelism.
-
-| DGX Spark, 832×480 | 124 frames (5 s) | 243 frames (10 s) |
+| DGX Spark, 832×480 | 5 s | 10 s |
 |---|---:|---:|
-| 1× Spark, FastH3 Trim 8-step | 134.5 s | 277.3 s |
-| 1× Spark, FastH3 V2 8-step | 141.4 s | 307.2 s |
-| 2× Spark, FastH3 Trim 8-step | 78.3 s | 164.5 s |
-| 2× Spark, FastH3 V2 8-step | 87.2 s | 180.0 s |
+| 1× Spark, FastH3 Trim | 134.5 s | 277.3 s |
+| 1× Spark, FastH3 V2 | 141.4 s | 307.2 s |
+| 2× Spark, FastH3 Trim | 78.3 s | 164.5 s |
+| 2× Spark, FastH3 V2 | 87.2 s | 180.0 s |
 
-Each value is the average of the two benchmark prompts. Each prompt's value is the median of two timed runs after one warmup. Repeated runs of a prompt give identical frames.
+In [FastH3 Goes Local](/blogs/fasth3-local/), a 5 s clip took 243 s on one Spark and 209 s on two, with the four-step preview model and the full H3 VAE. The eight-step models now do twice as many denoising steps and still finish faster.
 
-In [FastH3 Goes Local](/blogs/fasth3-local/), a 124-frame clip took 243 s on one Spark and 209 s on two. Those runs used the 4-step preview and the full H3 VAE. The new 8-step models do twice as many denoising steps and are still faster: 134.5 s on one Spark and 78.3 s on two.
+On Apple Silicon, FastH3 Trim runs in MLX with INT6 weights, the NVFP4 text encoder and the lightweight VAE.
 
-<div class="fasth3-rtx-todo"><b>TODO (Mac, Track C, PR #47).</b> FastH3 Trim in MLX INT6 on the M4 Max (36 GB), light VAE, NVFP4 encoder. INT6 medians at 124 and 243 frames are still running. Compare against FastH3 Goes Local (M4 Max INT6, 456 s at 124 frames, four-step preview, full VAE) and state those differences beside any ratio.</div>
+<div class="fasth3-rtx-todo"><b>TODO (Mac).</b> M4 Max INT6 times at 5 s and 10 s, measured with the default attention path. Compare against FastH3 Goes Local (M4 Max INT6, 456 s for 5 s with the four-step preview and full VAE) and state those differences next to any ratio.</div>
 
 ## Where the time goes
 
 {{< image src="img/fig_stages.svg" alt="100% stacked bars. RTX 4090 FastH3 Trim FP8 480p 5 s, 41.8 s: denoise 78%, decode 16%, rest 6%. RTX 4090 480p 10 s, 79.7 s: denoise 80%, decode 17%, rest 4%. 4× GB200 V1 768p 10 s, 15.5 s: denoise 37%, decode 25%, rest 38%." width="100%" title="Figure 5. Share of end-to-end time per stage." >}}
 
-<div class="fasth3-rtx-todo"><b>TODO.</b> Add a 5090 row from the run logs.</div>
+On one 4090, denoising is about 80% of the end-to-end time. Once the model fits in GPU memory and denoising gets fast, the other stages take a larger share. On four GB200s, the four-step V1 model spends 9.8 s computing a 10 s, 768p clip: 5.7 s denoising, 3.8 s decoding across the four GPUs, and the rest on text encoding. Moving frames out of the GPU workers and writing the MP4 take another 5.7 s, and that is the next stage we will optimize.
 
-On one 4090, denoising is approximately 80% of the end-to-end time. When the model fits in GPU memory, the other stages become a larger part of the total. On four GB200 GPUs, V1 uses 9.8 s of compute for a 10 s, 768p clip:
+## Limitations and what comes next
 
-- 5.7 s for denoising,
-- 3.8 s for decoding, distributed across the four GPUs,
-- the remaining time for text encoding.
-
-The transfer of frames out of the GPU workers and the MP4 write take another 5.7 s. This is the next stage that we will optimize.
+- **FastH3 Trim is less capable than FastH3 V2.** Removing eight blocks costs some detail and prompt adherence, and long or busy scenes can gain or lose objects partway through. Use V2 when quality matters most.
+- **This is our first pruned release.** We are experimenting with pruning FastH3 V2 itself instead of base H3, and we plan to push toward smaller models.
+- **We reviewed quality by eye** on 36 held-out prompts, not with a large human study. Our automatic scorer misses speech and anatomy defects, so we do not rely on it.
+- **Not tested yet:** RTX 30-series GPUs, real 16 GB and 12 GB GPUs (our numbers cap memory on a 4090), an 8 GB tier, and 10 s, 768p clips with less than 24 GB.
 
 ## Get the models
 
-<div class="fasth3-rtx-todo"><b>TODO before publishing.</b> Make the Trim repos public under these names and link each to its Cookbook recipe.</div>
-
 | Hardware | Model | Hugging Face |
 |---|---|---|
-| RTX 5090, RTX PRO 6000, DGX Spark (Blackwell) | FastH3 Trim, 8-step, NVFP4 | [`FastVideo/FastVideo-FastH3-Trim-8-Step-NVFP4`](https://huggingface.co/FastVideo/FastVideo-FastH3-Trim-8-Step-NVFP4) |
-| RTX 4090, 16 GB and 12 GB GPUs | FastH3 Trim, 8-step, FP8 | [`FastVideo/FastVideo-FastH3-Trim-8-Step-FP8`](https://huggingface.co/FastVideo/FastVideo-FastH3-Trim-8-Step-FP8) |
-| Apple Silicon, MLX | FastH3 Trim, 8-step, INT6 | [`FastVideo/FastVideo-FastH3-Trim-8-Step-MLX-INT6`](https://huggingface.co/FastVideo/FastVideo-FastH3-Trim-8-Step-MLX-INT6) |
-| Source weights | FastH3 Trim, 8-step, BF16 | [`FastVideo/FastVideo-FastH3-Trim-8-Step`](https://huggingface.co/FastVideo/FastVideo-FastH3-Trim-8-Step) |
-| Full quality, Blackwell GPUs | FastH3 V2, 8-step, NVFP4 | [`FastVideo/FastVideo-FastH3-8-Step-V2-NVFP4`](https://huggingface.co/FastVideo/FastVideo-FastH3-8-Step-V2-NVFP4) |
-| Full quality, data-center GPUs | FastH3 V2, 8-step, BF16 | [`FastVideo/FastVideo-FastH3-8-Step-V2`](https://huggingface.co/FastVideo/FastVideo-FastH3-8-Step-V2) |
+| RTX 5090, RTX PRO 6000, DGX Spark (Blackwell) | FastH3 Trim, NVFP4 | [`FastVideo/FastVideo-FastH3-Trim-8-Step-NVFP4`](https://huggingface.co/FastVideo/FastVideo-FastH3-Trim-8-Step-NVFP4) |
+| RTX 4090, 16 GB and 12 GB GPUs | FastH3 Trim, FP8 | [`FastVideo/FastVideo-FastH3-Trim-8-Step-FP8`](https://huggingface.co/FastVideo/FastVideo-FastH3-Trim-8-Step-FP8) |
+| Apple Silicon (MLX) | FastH3 Trim, INT6 | [`FastVideo/FastVideo-FastH3-Trim-8-Step-MLX-INT6`](https://huggingface.co/FastVideo/FastVideo-FastH3-Trim-8-Step-MLX-INT6) |
+| Source weights | FastH3 Trim, BF16 | [`FastVideo/FastVideo-FastH3-Trim-8-Step`](https://huggingface.co/FastVideo/FastVideo-FastH3-Trim-8-Step) |
+| Full quality, Blackwell GPUs | FastH3 V2, NVFP4 | [`FastVideo/FastVideo-FastH3-8-Step-V2-NVFP4`](https://huggingface.co/FastVideo/FastVideo-FastH3-8-Step-V2-NVFP4) |
+| Full quality, data-center GPUs | FastH3 V2, BF16 | [`FastVideo/FastVideo-FastH3-8-Step-V2`](https://huggingface.co/FastVideo/FastVideo-FastH3-8-Step-V2) |
 
-Each repository contains the NVFP4 text encoder, the lightweight VAE and a `fastvideo_inference.json` file. This file contains the sampling schedule. FastVideo reads it and uses the correct steps automatically.
-
-Example for one RTX 5090:
+Each repository includes the text encoder, the lightweight VAE and a `fastvideo_inference.json` file with the sampling schedule, which FastVideo reads automatically. On one RTX 5090:
 
 ```python
 from fastvideo import VideoGenerator
@@ -422,23 +217,17 @@ generator.generate_video(
 )
 ```
 
-<div class="fasth3-rtx-todo"><b>TODO.</b> Replace the environment-variable switches used in our benchmarks (FP4 sparse attention, fusions, VAE parking) with Cookbook recipes and one-line CLI commands for the 5090, 4090 and 16 GB tiers.</div>
-
-## Limitations
-
-- **Pruning decreases quality to increase speed.** FastH3 Trim keeps 42 of 50 blocks. FastH3 V2 is the quality reference.
-- **FP4 attention is new.** Calibrated scales cover all quantized layers. We reviewed 36 prompts by eye. We did not do a large human study.
-- **Not tested yet:** RTX 30-series GPUs, real 16 GB and 12 GB GPUs (our results limit memory on a 4090), and 10 s, 768p clips with less than 24 GB.
+<div class="fasth3-rtx-todo"><b>TODO before publishing.</b> Make the Trim repos public under these names and link each one to its Cookbook recipe.</div>
 
 ## Acknowledgements
 
-FastVideo FastH3 builds on [MiniMax H3](https://huggingface.co/MiniMaxAI/MiniMax-H3). We thank the MiniMax team for releasing its weights and code.
+FastH3 builds on [MiniMax H3](https://huggingface.co/MiniMaxAI/MiniMax-H3), and we thank the MiniMax team for releasing its weights and code.
 
-The lightweight decoder is the [LynnReal Lightweight Video VAE](https://huggingface.co/stdstu123/LynnReal-Onmi-light-vae) ([paper](https://arxiv.org/abs/2609.15863), [code](https://github.com/LynnReal-AI/LynnReal-Omni)). We load it with the INT8 weights from [Kijai](https://huggingface.co/Kijai)'s [MiniMax-H3-experimental](https://huggingface.co/Kijai/MiniMax-H3-experimental). We thank both.
+The lightweight decoder is the [LynnReal Lightweight Video VAE](https://huggingface.co/stdstu123/LynnReal-Onmi-light-vae) ([paper](https://arxiv.org/abs/2609.15863), [code](https://github.com/LynnReal-AI/LynnReal-Omni)), loaded with the INT8 weights from [Kijai](https://huggingface.co/Kijai)'s [MiniMax-H3-experimental](https://huggingface.co/Kijai/MiniMax-H3-experimental). We thank both.
 
-We thank the NVIDIA Enterprise Products team (Pengcheng Li and Cliff Woolley) for the Video Sparse Attention kernel. We also thank the FlashInfer and NVIDIA Model Optimizer teams for the FP4 kernels and calibration tools. The FP4 sparse attention on RTX GPUs builds on [SageAttention](https://github.com/thu-ml/SageAttention). Ollin Boer Bohan's [TAEH3](https://github.com/madebyollin/taehv) is the fast preview decoder.
+We thank the NVIDIA Enterprise Products team (Pengcheng Li and Cliff Woolley) for the Video Sparse Attention kernel, and the FlashInfer and NVIDIA Model Optimizer teams for the FP4 kernels and calibration tools. The FP4 sparse attention on RTX GPUs builds on [SageAttention](https://github.com/thu-ml/SageAttention), and Ollin Boer Bohan's [TAEH3](https://github.com/madebyollin/taehv) is the fast preview decoder.
 
-The FastVideo Team collaborated closely with [Nuva Lab](https://nuvalab.ai/), [NVIDIA FastGen](https://github.com/NVlabs/FastGen) (Julius Berner, Chao Liu, Arash Vahdat) and the NVIDIA Enterprise Products team on [FastH3](/blogs/fasth3-preview/). We also thank the [vLLM project](https://vllm.ai/), [NVIDIA](https://www.nvidia.com/en-us/) and [MBZUAI](https://mbzuai.ac.ae/) for their continued sponsorship and support of FastVideo.
+The FastVideo team worked closely with [Nuva Lab](https://nuvalab.ai/), [NVIDIA FastGen](https://github.com/NVlabs/FastGen) (Julius Berner, Chao Liu, Arash Vahdat) and the NVIDIA Enterprise Products team on [FastH3](/blogs/fasth3-preview/). We also thank the [vLLM project](https://vllm.ai/), [NVIDIA](https://www.nvidia.com/en-us/) and [MBZUAI](https://mbzuai.ac.ae/) for their continued sponsorship and support of FastVideo.
 
 ## FastVideo team
 
@@ -456,43 +245,21 @@ The FastVideo Team collaborated closely with [Nuva Lab](https://nuvalab.ai/), [N
 <a href="https://x.com/haozhangml" aria-label="Hao Zhang X"><i class="fab fa-x-twitter"></i></a>
 
 <style>
-.fasth3-rtx-article .fasth3-rtx-scroll {
-  width: 100%;
-  overflow-x: auto;
+.fasth3-rtx-article .fasth3-rtx-todo {
+  margin: 1.4rem 0;
+  padding: 0.85rem 1rem;
+  border: 1.5px dashed #eb6834;
+  border-radius: 10px;
+  background: rgba(235, 104, 52, 0.07);
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
 .fasth3-rtx-article .fasth3-rtx-grid {
   display: grid;
-  margin: 1.4rem 0 1.8rem;
-  gap: 0.9rem 0.55rem;
-  align-items: start;
-}
-
-.fasth3-rtx-article .fasth3-rtx-grid--models {
-  min-width: 720px;
-  grid-template-columns: 4.6rem repeat(5, minmax(0, 1fr));
-}
-
-.fasth3-rtx-article .fasth3-rtx-grid--devices {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.fasth3-rtx-article .fasth3-rtx-colhead,
-.fasth3-rtx-article .fasth3-rtx-rowhead {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  font-size: 0.8rem;
-  line-height: 1.3;
-}
-
-.fasth3-rtx-article .fasth3-rtx-colhead span {
-  color: var(--secondary);
-}
-
-.fasth3-rtx-article .fasth3-rtx-rowhead {
-  align-self: center;
-  font-weight: 600;
+  margin: 1rem 0 1.6rem;
+  gap: 0.9rem 0.6rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .fasth3-rtx-article .fasth3-rtx-clip {
@@ -500,11 +267,19 @@ The FastVideo Team collaborated closely with [Nuva Lab](https://nuvalab.ai/), [N
   margin: 0;
 }
 
+.fasth3-rtx-article .fasth3-rtx-hero {
+  margin: 1.4rem 0 0.4rem;
+}
+
 .fasth3-rtx-article .fasth3-rtx-frame {
   position: relative;
   aspect-ratio: 832 / 480;
   border: 1.5px dashed var(--border);
   border-radius: 8px;
+}
+
+.fasth3-rtx-article .fasth3-rtx-frame--wide {
+  aspect-ratio: 1344 / 768;
 }
 
 .fasth3-rtx-article .fasth3-rtx-frame::before {
@@ -515,7 +290,7 @@ The FastVideo Team collaborated closely with [Nuva Lab](https://nuvalab.ai/), [N
   place-items: center;
   padding: 0.4rem;
   color: var(--secondary);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   text-align: center;
 }
 
@@ -534,54 +309,25 @@ The FastVideo Team collaborated closely with [Nuva Lab](https://nuvalab.ai/), [N
   flex-wrap: wrap;
   gap: 0.2rem 0.45rem;
   margin: 0.4rem 0 0;
-  font-size: 0.78rem;
-  line-height: 1.3;
+  font-size: 0.8rem;
+  line-height: 1.35;
 }
 
 .fasth3-rtx-article .fasth3-rtx-clip > figcaption span {
   color: var(--secondary);
 }
 
-@media (max-width: 760px) {
-  .fasth3-rtx-article .fasth3-rtx-grid--devices {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-.fasth3-rtx-article .fasth3-rtx-todo {
-  margin: 1.4rem 0;
-  padding: 0.85rem 1rem;
-  border: 1.5px dashed #eb6834;
-  border-radius: 10px;
-  background: rgba(235, 104, 52, 0.07);
-  font-size: 0.9rem;
-  line-height: 1.5;
-}
-
-.fasth3-rtx-article .fasth3-rtx-todo ul {
-  margin: 0.5rem 0 0;
-  padding-left: 1.2rem;
-}
-
-.fasth3-rtx-article .fasth3-rtx-pending {
-  color: #eb6834;
-  font-weight: 600;
-}
-
-.fasth3-rtx-article .fasth3-rtx-table table {
-  width: 100%;
+.fasth3-rtx-article table {
   font-size: 0.92rem;
 }
 
-.fasth3-rtx-article .fasth3-rtx-table td:nth-child(4),
-.fasth3-rtx-article .fasth3-rtx-table td:nth-child(5) {
+.fasth3-rtx-article td {
   font-variant-numeric: tabular-nums;
-  white-space: nowrap;
 }
 
 @media (max-width: 760px) {
-  .fasth3-rtx-article .fasth3-rtx-table {
-    overflow-x: auto;
+  .fasth3-rtx-article .fasth3-rtx-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>
