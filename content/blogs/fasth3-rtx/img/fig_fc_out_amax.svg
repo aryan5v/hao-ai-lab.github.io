@@ -70,4 +70,4 @@
 <text class="t2" x="552.0" y="318" font-size="11.5" text-anchor="middle">30</text>
 <text class="t2" x="632.0" y="318" font-size="11.5" text-anchor="middle">35</text>
 <text class="t2" x="712.0" y="318" font-size="11.5" text-anchor="middle">40</text>
-<line class="axis" x1="64" x2="736" y1="300" y2="300" stroke-width="1"/><text class="t2" x="400.0" y="340" font-size="12.5" text-anchor="middle">Transformer block (pruned FastH3, 42 blocks)</text><text class="t2" x="16" y="175.0" font-size="12.5" text-anchor="middle" transform="rotate(-90 16 175.0)">max |input|, log scale</text></svg>
+<line class="axis" x1="64" x2="736" y1="300" y2="300" stroke-width="1"/><text class="t2" x="400.0" y="340" font-size="12.5" text-anchor="middle">Transformer block (FastH3 Trim, 42 blocks)</text><text class="t2" x="16" y="175.0" font-size="12.5" text-anchor="middle" transform="rotate(-90 16 175.0)">max |input|, log scale</text></svg>
