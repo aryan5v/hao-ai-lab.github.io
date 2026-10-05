@@ -25,13 +25,13 @@ contentClass = "fasth3-rtx-article"
 
 {{< socialBadges github="hao-ai-lab/FastVideo" slack="https://join.slack.com/t/fastvideo/shared_invite/zt-3f4lao1uq-u~Ipx6Lt4J27AlD2y~IdLQ" huggingface="https://huggingface.co/collections/FastVideo/fastvideo-fasth3" >}}
 
-FastH3 V2 generates video with synchronized audio in eight steps, and at those eight steps it already beats base H3 on quality. Until now it needed data-center GPUs: its weights take 138 GiB. Today FastH3 V2 runs on a single consumer machine: an RTX 5090, RTX 4090, RTX 3090 or RTX PRO 6000, a DGX Spark, or an Apple Silicon Mac. We are also releasing **FastH3 Trim**, an experimental smaller version that removes 8 of the 50 transformer blocks to run faster still.
+FastH3 V2 generates video with synchronized audio in eight steps, and at those eight steps it already beats base H3 on quality. Until now it needed data-center GPUs: its weights take 138 GiB. Today FastH3 V2 runs on a single consumer machine: an RTX 5090, RTX 4090 or RTX PRO 6000, a DGX Spark, or an Apple Silicon Mac. We are also releasing **FastH3 Trim**, an experimental smaller version that removes 8 of the 50 transformer blocks to run faster still.
 
 This post continues [FastH3 Goes Local](/blogs/fasth3-local/), which brought FastH3 to the DGX Spark and the Mac and named the RTX family as the next target.
 
 ## TL;DR
 
-- **FastH3 V2 now runs on one consumer GPU, a DGX Spark or a Mac.** We ship it in NVFP4 for Blackwell GPUs and DGX Spark, FP8 for the RTX 4090 and RTX 3090, and INT6 for Apple Silicon.
+- **FastH3 V2 now runs on one consumer GPU, a DGX Spark or a Mac.** We ship it in NVFP4 for Blackwell GPUs and DGX Spark, FP8 for the RTX 4090 and GPUs with less memory, and INT6 for Apple Silicon.
 - **Quantization keeps the quality.** Every FP4 layer uses activation scales calibrated on 1,000 prompts, so large activations are not clipped.
 - **FastH3 Trim is an experiment in making the model smaller.** It is 4.2× smaller than base H3 and faster than V2 on every device, at some cost in quality.
 - **There is room to improve, and we will keep working on it.** Both models are eight-step distillations; we expect better quality and smaller models in future releases.
@@ -95,23 +95,6 @@ Each row is one machine. The left clip is FastH3 V2 and the right clip is FastH3
     </div>
     <figcaption><b>Trim · FP8</b><span>— s</span></figcaption>
   </figure>
-  <div class="fasth3-rtx-rowhead"><b>RTX 3090</b><span>24 GB · FP8</span></div>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="rtx3090/v2-fp8-showcase.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 V2 on RTX 3090">
-        <source src="img/videos/rtx3090/v2-fp8-showcase.mp4" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>V2 · FP8</b><span>— s</span></figcaption>
-  </figure>
-  <figure class="fasth3-rtx-clip">
-    <div class="fasth3-rtx-frame" data-file="rtx3090/trim-fp8-showcase.mp4">
-      <video controls playsinline preload="metadata" aria-label="FastH3 Trim on RTX 3090">
-        <source src="img/videos/rtx3090/trim-fp8-showcase.mp4" type="video/mp4">
-      </video>
-    </div>
-    <figcaption><b>Trim · FP8</b><span>— s</span></figcaption>
-  </figure>
   <div class="fasth3-rtx-rowhead"><b>DGX Spark</b><span>128 GB unified · NVFP4</span></div>
   <figure class="fasth3-rtx-clip">
     <div class="fasth3-rtx-frame" data-file="spark-1x/v2-nvfp4-showcase.mp4">
@@ -164,7 +147,6 @@ We report two numbers per machine: a 5 s clip at 832×480 and a 5 s clip at 1344
 | RTX 4090 | 24 GB | — | 41.8 s | — | — |
 | RTX 4090, 16 GB limit | 16 GB | — | — | — | — |
 | RTX 4090, 12 GB limit | 12 GB | — | — | — | — |
-| RTX 3090 | 24 GB | — | — | — | — |
 | DGX Spark | 128 GB unified | 141.4 s | 134.5 s | — | — |
 | 2× DGX Spark | 128 GB each | 87.2 s | 78.3 s | — | — |
 | Mac (M4 Max) | 36 GB unified | — | — | — | — |
@@ -191,7 +173,7 @@ With attention and the gate also in NVFP4, the DiT is 11.1 GiB and stays on the 
 
 One detail cost us a crash first. Fast host-to-GPU copies need page-locked ("pinned") host memory, and PyTorch's pinned allocator rounds each block up to a power of two. For the H3 FP4 weight shapes, 2.87 GiB of tensors used 5.06 GiB of host RAM, enough to get the process killed in a 60 GB cloud container. We now pin one exact-size buffer per module with `cudaHostRegister` and place the tensors inside it, which brings the same tensors down to 2.90 GiB.
 
-### RTX 4090, RTX 3090 and smaller memory
+### RTX 4090 and smaller memory
 
 The RTX 4090 has no FP4 tensor cores, so it uses FP8: 8-bit weights with one scale per output channel and 8-bit activations with one scale per token. PyTorch's FP8 matrix multiply with these scales runs at about 70 TFLOPS on a 4090, slower than BF16 at about 160 TFLOPS. The per-tensor FP8 kernel runs at 220–305 TFLOPS, so we call it with unit scales and apply both scale vectors to the output in one fused pass. The result matches per-token, per-channel scaling and costs 5–10% more than per-tensor scaling.
 
@@ -201,7 +183,7 @@ Three more changes bring the 4090 to 41.8 s for a 5 s clip:
 - **Text encoder:** it streams to the GPU one layer at a time through exact-size pinned buffers, and one fused kernel expands its NVFP4 weights.
 - **VAE:** the same INT8 lightweight VAE as every other device, with a fused dequantization step and one shared quantized input for the Q, K and V projections. Decoded frames are bit-identical to the unoptimized path.
 
-For the 16 GB and 12 GB rows, we cap the PyTorch allocator on the same 4090. They show that the model fits in that much memory; a real 16 GB GPU will be slower. The RTX 3090 has no FP8 tensor cores, so it stores the same FP8 weights and computes in BF16.
+For the 16 GB and 12 GB rows, we cap the PyTorch allocator on the same 4090. They show that the model fits in that much memory; a real 16 GB GPU will be slower.
 
 ### DGX Spark and Apple Silicon
 
@@ -257,7 +239,7 @@ On one 4090, denoising is about 80% of the end-to-end time. Once the model fits 
 | Hardware | FastH3 V2 | FastH3 Trim |
 |---|---|---|
 | RTX 5090, RTX PRO 6000, DGX Spark (NVFP4) | [`FastVideo-FastH3-8-Step-V2-NVFP4-Consumer`](https://huggingface.co/FastVideo/FastVideo-FastH3-8-Step-V2-NVFP4-Consumer) | [`FastVideo-FastH3-Trim-8-Step-NVFP4`](https://huggingface.co/FastVideo/FastVideo-FastH3-Trim-8-Step-NVFP4) |
-| RTX 4090, RTX 3090, 16 GB and 12 GB GPUs (FP8) | [`FastVideo-FastH3-8-Step-V2-FP8`](https://huggingface.co/FastVideo/FastVideo-FastH3-8-Step-V2-FP8) | [`FastVideo-FastH3-Trim-8-Step-FP8`](https://huggingface.co/FastVideo/FastVideo-FastH3-Trim-8-Step-FP8) |
+| RTX 4090, 16 GB and 12 GB GPUs (FP8) | [`FastVideo-FastH3-8-Step-V2-FP8`](https://huggingface.co/FastVideo/FastVideo-FastH3-8-Step-V2-FP8) | [`FastVideo-FastH3-Trim-8-Step-FP8`](https://huggingface.co/FastVideo/FastVideo-FastH3-Trim-8-Step-FP8) |
 | Apple Silicon (MLX INT6) | [`FastVideo-FastH3-8-Step-V2-MLX-INT6`](https://huggingface.co/FastVideo/FastVideo-FastH3-8-Step-V2-MLX-INT6) | [`FastVideo-FastH3-Trim-8-Step-MLX-INT6`](https://huggingface.co/FastVideo/FastVideo-FastH3-Trim-8-Step-MLX-INT6) |
 | Source weights (BF16) | [`FastVideo-FastH3-8-Step-V2`](https://huggingface.co/FastVideo/FastVideo-FastH3-8-Step-V2) | [`FastVideo-FastH3-Trim-8-Step`](https://huggingface.co/FastVideo/FastVideo-FastH3-Trim-8-Step) |
 

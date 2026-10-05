@@ -10,7 +10,7 @@ session wires your files in.
 
 | Agent | Devices (folder names) | Format |
 |---|---|---|
-| Lead | `gb200x4`, `rtx5090`, `rtx-pro-6000`, `rtx3090` | NVFP4 (Blackwell), FP8 (3090) |
+| Lead | `gb200x4`, `rtx5090`, `rtx-pro-6000` | NVFP4 |
 | Track B | `rtx4090-24gb`, `rtx4090-16gb`, `rtx4090-12gb` (stretch: `rtx4090-8gb`) | FP8 |
 | Track C | `spark-1x`, `spark-2x`, `m4max` | NVFP4 (Spark), MLX INT6 (Mac) |
 
@@ -19,7 +19,7 @@ session wires your files in.
 | Format | FastH3 V2 | FastH3 Trim |
 |---|---|---|
 | NVFP4 (5090, PRO 6000, Spark) | `FastVideo/FastVideo-FastH3-8-Step-V2-NVFP4-Consumer` | `FastVideo/FastVideo-FastH3-Trim-8-Step-NVFP4` |
-| FP8 (4090, 3090, memory tiers) | `FastVideo/FastVideo-FastH3-8-Step-V2-FP8` | `FastVideo/FastVideo-FastH3-Trim-8-Step-FP8` |
+| FP8 (4090 and its memory tiers) | `FastVideo/FastVideo-FastH3-8-Step-V2-FP8` | `FastVideo/FastVideo-FastH3-Trim-8-Step-FP8` |
 | MLX INT6 (Mac) | `FastVideo/FastVideo-FastH3-8-Step-V2-MLX-INT6` | `FastVideo/FastVideo-FastH3-Trim-8-Step-MLX-INT6` |
 | BF16 source | `FastVideo/FastVideo-FastH3-8-Step-V2` | `FastVideo/FastVideo-FastH3-Trim-8-Step` |
 
@@ -30,7 +30,7 @@ Code: RTX GPUs use the branch of hao-ai-lab/FastVideo#1919 (`aryan5v:fasth3-rtx`
 hao-ai-lab/FastVideo#1920 (`aryan5v:fasth3-spark-mlx`), which includes the GB10 NVFP4 fence that DGX Spark needs for
 correct repeated runs.
 
-Every repo ships the NVFP4 text encoder. On GPUs without FP4 (4090, 3090) it dequantizes per layer; use the
+Every repo ships the NVFP4 text encoder. On GPUs without FP4 (the 4090) it dequantizes per layer; use the
 streamed encoder with fused dequantization (`FASTVIDEO_H3_ENCODER_LAYERWISE=1`, `FASTVIDEO_H3_ENCODER_FUSED_DEQUANT=1`).
 MLX loads it natively. No other encoder is needed.
 
