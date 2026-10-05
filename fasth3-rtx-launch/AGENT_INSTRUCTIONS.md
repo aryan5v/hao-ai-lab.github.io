@@ -1,6 +1,6 @@
 # FastH3 consumer launch: instructions for device agents
 
-> **Update (Oct 5, 19:45 UTC): the showcase set is now 4 prompts (see section 2).** Do not render more than these 4.
+> **HOLD (Oct 5, 19:50 UTC): do not render showcase clips yet.** New showcase prompts are coming in `showcase_prompts.json` within the hour; this note will be removed when they are final. Do the timing runs (section 1) now.
 
 The blog post is `content/blogs/fasth3-rtx/index.md` on branch `fasth3-rtx-blog` of
 `aryan5v/hao-ai-lab.github.io` (PR hao-ai-lab/hao-ai-lab.github.io#108). Its story: **FastH3 V2 (8 steps, better than
