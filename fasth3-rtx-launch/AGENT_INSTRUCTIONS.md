@@ -1,6 +1,6 @@
 # FastH3 consumer launch: instructions for device agents
 
-> **HOLD (Oct 5, 19:50 UTC): do not render showcase clips yet.** New showcase prompts are coming in `showcase_prompts.json` within the hour; this note will be removed when they are final. Do the timing runs (section 1) now.
+> **FINAL (Oct 5, 20:00 UTC): the showcase set is the 4 prompts in `showcase_prompts.json`.** Render each once per model at seed 1234. Nothing else.
 
 The blog post is `content/blogs/fasth3-rtx/index.md` on branch `fasth3-rtx-blog` of
 `aryan5v/hao-ai-lab.github.io` (PR hao-ai-lab/hao-ai-lab.github.io#108). Its story: **FastH3 V2 (8 steps, better than
@@ -50,11 +50,10 @@ MLX loads it natively. No other encoder is needed.
 
 ### 2. Showcase clips (the gallery)
 
-- **Only 4 prompts**, from `fasth3-rtx-launch/showcase_prompts.json`: fox-snow, violinist-archway, chef-tasting,
-  robot-windowsill. The post shows one clip per model per device, picked from these.
-- 832x480, 124 frames, seed 1234, both models. Fast GPUs (seconds per clip) may add seed 42; slow devices (Mac, one
-  Spark) use seed 1234 only.
-- Stop at these 4. If you already rendered more, keep and push them; do not start new ones.
+- The 4 prompts in `fasth3-rtx-launch/showcase_prompts.json`: corgi-weather, street-food-jingle, parrot-pirate,
+  grandma-dj. The post shows one clip per model per device, picked from these.
+- 832x480, 124 frames, **seed 1234 only**, once with FastH3 V2 and once with FastH3 Trim: 8 clips per device.
+- No extra seeds, no other prompts.
 
 ## Files (exact names)
 
