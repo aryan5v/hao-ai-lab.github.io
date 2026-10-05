@@ -57,7 +57,64 @@
           "integrated_lufs": -9.9,
           "true_peak_dbfs": 0.2
         },
-        "visual_review": "coherent corgi and weather desk; no corruption",
+        "visual_review": "coherent subject and scene, no corruption",
+        "speech_or_lipsync_parity": "not evaluated",
+        "prompt_file_sha256": "b34b6b57c56a59ba667a56f5de81254b00ed6374ce8a0ebb104fca7a886362f8"
+      },
+      {
+        "prompt": "street-food-jingle",
+        "file": "trim-nvfp4-street-food-jingle.mp4",
+        "seed": 1234,
+        "width": 832,
+        "height": 480,
+        "frames": 124,
+        "e2e_s": 116.96650037600193,
+        "decoded_video_md5": "f516a570d8ce69657234d7a467c02f3a",
+        "audio": {
+          "mp4": "trim-nvfp4-street-food-jingle-832x480-showcase.mp4",
+          "decoded_audio_md5": "59deaa7d5dce5454347fbfe37754fd4b",
+          "integrated_lufs": -16.7,
+          "true_peak_dbfs": -0.4
+        },
+        "visual_review": "coherent subject and scene, no corruption",
+        "speech_or_lipsync_parity": "not evaluated",
+        "prompt_file_sha256": "b34b6b57c56a59ba667a56f5de81254b00ed6374ce8a0ebb104fca7a886362f8"
+      },
+      {
+        "prompt": "parrot-pirate",
+        "file": "trim-nvfp4-parrot-pirate.mp4",
+        "seed": 1234,
+        "width": 832,
+        "height": 480,
+        "frames": 124,
+        "e2e_s": 113.31711131300835,
+        "decoded_video_md5": "9e33e601c34e88af42c4495d57e56383",
+        "audio": {
+          "mp4": "trim-nvfp4-parrot-pirate-832x480-showcase.mp4",
+          "decoded_audio_md5": "9eee3c044106da19f5a603c8de2f9469",
+          "integrated_lufs": -27.6,
+          "true_peak_dbfs": -14.1
+        },
+        "visual_review": "coherent subject and scene, no corruption",
+        "speech_or_lipsync_parity": "not evaluated",
+        "prompt_file_sha256": "b34b6b57c56a59ba667a56f5de81254b00ed6374ce8a0ebb104fca7a886362f8"
+      },
+      {
+        "prompt": "grandma-dj",
+        "file": "trim-nvfp4-grandma-dj.mp4",
+        "seed": 1234,
+        "width": 832,
+        "height": 480,
+        "frames": 124,
+        "e2e_s": 113.15396469600091,
+        "decoded_video_md5": "c2436633090576170529e4454d609c20",
+        "audio": {
+          "mp4": "trim-nvfp4-grandma-dj-832x480-showcase.mp4",
+          "decoded_audio_md5": "e4da0e06576061acc8d7e0df7faa0779",
+          "integrated_lufs": -12.1,
+          "true_peak_dbfs": 0.7
+        },
+        "visual_review": "coherent subject and scene, no corruption",
         "speech_or_lipsync_parity": "not evaluated",
         "prompt_file_sha256": "b34b6b57c56a59ba667a56f5de81254b00ed6374ce8a0ebb104fca7a886362f8"
       }
@@ -121,7 +178,64 @@
           "integrated_lufs": -9.9,
           "true_peak_dbfs": 0.2
         },
-        "visual_review": "coherent corgi and weather desk; no corruption",
+        "visual_review": "coherent subject and scene, no corruption",
+        "speech_or_lipsync_parity": "not evaluated",
+        "prompt_file_sha256": "b34b6b57c56a59ba667a56f5de81254b00ed6374ce8a0ebb104fca7a886362f8"
+      },
+      {
+        "prompt": "street-food-jingle",
+        "file": "trim-nvfp4-street-food-jingle.mp4",
+        "seed": 1234,
+        "width": 832,
+        "height": 480,
+        "frames": 124,
+        "e2e_s": 116.96650037600193,
+        "decoded_video_md5": "f516a570d8ce69657234d7a467c02f3a",
+        "audio": {
+          "mp4": "trim-nvfp4-street-food-jingle-832x480-showcase.mp4",
+          "decoded_audio_md5": "59deaa7d5dce5454347fbfe37754fd4b",
+          "integrated_lufs": -16.7,
+          "true_peak_dbfs": -0.4
+        },
+        "visual_review": "coherent subject and scene, no corruption",
+        "speech_or_lipsync_parity": "not evaluated",
+        "prompt_file_sha256": "b34b6b57c56a59ba667a56f5de81254b00ed6374ce8a0ebb104fca7a886362f8"
+      },
+      {
+        "prompt": "parrot-pirate",
+        "file": "trim-nvfp4-parrot-pirate.mp4",
+        "seed": 1234,
+        "width": 832,
+        "height": 480,
+        "frames": 124,
+        "e2e_s": 113.31711131300835,
+        "decoded_video_md5": "9e33e601c34e88af42c4495d57e56383",
+        "audio": {
+          "mp4": "trim-nvfp4-parrot-pirate-832x480-showcase.mp4",
+          "decoded_audio_md5": "9eee3c044106da19f5a603c8de2f9469",
+          "integrated_lufs": -27.6,
+          "true_peak_dbfs": -14.1
+        },
+        "visual_review": "coherent subject and scene, no corruption",
+        "speech_or_lipsync_parity": "not evaluated",
+        "prompt_file_sha256": "b34b6b57c56a59ba667a56f5de81254b00ed6374ce8a0ebb104fca7a886362f8"
+      },
+      {
+        "prompt": "grandma-dj",
+        "file": "trim-nvfp4-grandma-dj.mp4",
+        "seed": 1234,
+        "width": 832,
+        "height": 480,
+        "frames": 124,
+        "e2e_s": 113.15396469600091,
+        "decoded_video_md5": "c2436633090576170529e4454d609c20",
+        "audio": {
+          "mp4": "trim-nvfp4-grandma-dj-832x480-showcase.mp4",
+          "decoded_audio_md5": "e4da0e06576061acc8d7e0df7faa0779",
+          "integrated_lufs": -12.1,
+          "true_peak_dbfs": 0.7
+        },
+        "visual_review": "coherent subject and scene, no corruption",
         "speech_or_lipsync_parity": "not evaluated",
         "prompt_file_sha256": "b34b6b57c56a59ba667a56f5de81254b00ed6374ce8a0ebb104fca7a886362f8"
       }
