@@ -34,5 +34,41 @@
       "video_decode_s": 72.37174802049412
     },
     "clip": "img/videos/m4max/trim-int6-ceramics.mp4"
+  },
+  {
+    "device": "m4max",
+    "hardware": "M4 Max, 36 GiB unified memory",
+    "memory_limit_gib": 36,
+    "model": "trim-int6",
+    "repo": "FastVideo/FastVideo-FastH3-Trim-8-Step-MLX-INT6",
+    "prompt": "harbor",
+    "width": 832,
+    "height": 480,
+    "frames": 124,
+    "e2e_median_s": 926.885,
+    "e2e_runs_s": [
+      930.498,
+      923.272
+    ],
+    "denoise_s": 839.4031653749989,
+    "decode_s": 73.01006716644042,
+    "peak_gpu_gib": 19.476027889177203,
+    "peak_host_gib": 14.825,
+    "fastvideo_commit": "6ccdbc761e6b854003f472e39b826c06cb54de60",
+    "env": {
+      "FASTVIDEO_MLX_DQ_GEMM": "1"
+    },
+    "status": "ok",
+    "notes": "Seed1234; native124 frames, eight forwards, VSA0.8/tile64 reference attention; phased placement, wired27GiB, native NVFP4 encoder MLX layout cache, light VAE FP16 storage/tile256; end-to-end includes fresh conditioning and audio/mux. Host RSS is process high-water. Private model repo created; upload status and visual/audio review recorded separately.",
+    "stage_medians_s": {
+      "audio_decode_s": 0.6978614169929642,
+      "condition_s": 13.857129395997617,
+      "denoise_s": 839.4031653749989,
+      "dit_forward_s": 838.4848112699401,
+      "generate_s": 926.6240633329144,
+      "mux_s": 0.3537013954774011,
+      "video_decode_s": 72.31220574944746
+    },
+    "clip": "img/videos/m4max/trim-int6-harbor.mp4"
   }
 ]
