@@ -40,7 +40,28 @@
       "visual_review": "coherent pottery scene, no corruption",
       "frames": 124,
       "fps": 24
-    }
+    },
+    "showcase_clips": [
+      {
+        "prompt": "corgi-weather",
+        "file": "trim-nvfp4-corgi-weather.mp4",
+        "seed": 1234,
+        "width": 832,
+        "height": 480,
+        "frames": 124,
+        "e2e_s": 122.58604611300689,
+        "decoded_video_md5": "a5a206ec816354b239c9b7cac595951b",
+        "audio": {
+          "mp4": "trim-nvfp4-corgi-weather-832x480-showcase.mp4",
+          "decoded_audio_md5": "a013bb0ede723c8132ec4fdf26d232c2",
+          "integrated_lufs": -9.9,
+          "true_peak_dbfs": 0.2
+        },
+        "visual_review": "coherent corgi and weather desk; no corruption",
+        "speech_or_lipsync_parity": "not evaluated",
+        "prompt_file_sha256": "b34b6b57c56a59ba667a56f5de81254b00ed6374ce8a0ebb104fca7a886362f8"
+      }
+    ]
   },
   {
     "device": "spark-1x",
@@ -83,6 +104,27 @@
       "visual_review": "coherent harbor scene, no corruption",
       "frames": 124,
       "fps": 24
-    }
+    },
+    "showcase_clips": [
+      {
+        "prompt": "corgi-weather",
+        "file": "trim-nvfp4-corgi-weather.mp4",
+        "seed": 1234,
+        "width": 832,
+        "height": 480,
+        "frames": 124,
+        "e2e_s": 122.58604611300689,
+        "decoded_video_md5": "a5a206ec816354b239c9b7cac595951b",
+        "audio": {
+          "mp4": "trim-nvfp4-corgi-weather-832x480-showcase.mp4",
+          "decoded_audio_md5": "a013bb0ede723c8132ec4fdf26d232c2",
+          "integrated_lufs": -9.9,
+          "true_peak_dbfs": 0.2
+        },
+        "visual_review": "coherent corgi and weather desk; no corruption",
+        "speech_or_lipsync_parity": "not evaluated",
+        "prompt_file_sha256": "b34b6b57c56a59ba667a56f5de81254b00ed6374ce8a0ebb104fca7a886362f8"
+      }
+    ]
   }
 ]
