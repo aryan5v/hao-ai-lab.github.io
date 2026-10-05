@@ -2,13 +2,13 @@
 <style>
   .bg{fill:#fcfcfb} .t1{fill:#0b0b0b} .t2{fill:#52514e} .grid{stroke:#e4e3de} .axis{stroke:#9b9a95}
   .s1{fill:#33557d} .s2{fill:#b86a3c} .s3{fill:#b5afa5} .drop{fill:#b0463c} .ref{stroke:#52514e}
-  .gap{stroke:#fcfcfb} .on{fill:#ffffff} .on3{fill:#0b0b0b}
+  .gap{stroke:#fcfcfb} .on{fill:#ffffff} .on3{fill:#0b0b0b} .est{fill:none;stroke:#52514e}
   .ring{fill:none;stroke:#0b0b0b}
   text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
   @media (prefers-color-scheme: dark){
     .bg{fill:#1a1a19} .t1{fill:#ffffff} .t2{fill:#c3c2b7} .grid{stroke:#2e2e2c} .axis{stroke:#6b6a66}
     .s1{fill:#7393bb} .s2{fill:#c27448} .s3{fill:#69655e} .drop{fill:#c9605a} .ref{stroke:#c3c2b7}
-    .gap{stroke:#1a1a19} .on{fill:#0b0b0b} .on3{fill:#ffffff}
+    .gap{stroke:#1a1a19} .on{fill:#0b0b0b} .on3{fill:#ffffff} .est{fill:none;stroke:#c3c2b7}
     .ring{fill:none;stroke:#ffffff}
   }
 </style>

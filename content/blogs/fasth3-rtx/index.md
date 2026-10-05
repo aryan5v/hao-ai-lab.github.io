@@ -27,7 +27,7 @@ contentClass = "fasth3-rtx-article"
 
 ## **TL;DR:**
 
-- **One RTX 5090 generates a 5 s, 832×480 clip with synchronized audio in 12.9 s.** A 10 s, 1344×768 clip takes 48.0 s. We measure each time from prompt submission to the finished MP4.
+- **One RTX 5090 generates a 5 s, 832×480 clip with synchronized audio in 17.4 s with pruned FastH3.** A 10 s, 1344×768 clip takes 80.5 s. Four GB200s, our data-center baseline, take 4.3 s and 20.6 s. We measure each time from prompt submission to the finished MP4.
 - **Pruned FastH3 is a new model.** It keeps 42 of the 50 H3 transformer blocks, uses rank-16 timestep conditioning, and samples in 8 distilled steps. In NVFP4, its transformer is 11.1 GiB. The BF16 H3 transformer is 65.3 GiB.
 - **The full model is 4.2× smaller.** Pruned FastH3 with an NVFP4 text encoder and a lightweight VAE is 33.0 GiB. BF16 H3 is 137.7 GiB. This reduction lets one consumer GPU hold the model.
 - **All FP4 layers use calibrated activation scales.** In 40 of 42 blocks, one MLP layer receives inputs larger than the maximum value of an uncalibrated FP4 activation. We measured the activation range of each layer over 1,000 prompts and all denoising steps. The checkpoint contains these scales.
@@ -35,9 +35,216 @@ contentClass = "fasth3-rtx-article"
 
 This post continues [FastH3 Goes Local](/blogs/fasth3-local/), which identified the RTX family as the next CUDA target. FastH3 builds on [MiniMax H3](https://huggingface.co/MiniMaxAI/MiniMax-H3). We thank the MiniMax team for releasing its weights and code.
 
-## Generated on one GPU
+## Five models, one prompt
 
-<div class="fasth3-rtx-todo"><b>TODO (video grid, 3×2).</b> Same two release prompts (<code>latency-ceramics-005</code>, <code>latency-harbor-005</code>) plus one action prompt, on RTX 5090, RTX 4090 and RTX PRO 6000. Caption each with device, model, resolution and e2e seconds. Clips exist for the 5090 and PRO 6000 runs; the 4090 clips come from the Track B benchmark.</div>
+Each column is one model and format. Each row uses the same prompt and seed. All clips are 832×480, 5 s, with audio. Turn the audio on.
+
+<div class="fasth3-rtx-scroll">
+<div class="fasth3-rtx-grid fasth3-rtx-grid--models">
+  <div></div>
+  <div class="fasth3-rtx-colhead"><b>FastH3 V2</b><span>BF16 · 4× GB200</span></div>
+  <div class="fasth3-rtx-colhead"><b>FastH3 V2</b><span>NVFP4 · RTX 5090</span></div>
+  <div class="fasth3-rtx-colhead"><b>Pruned FastH3</b><span>NVFP4 · RTX 5090</span></div>
+  <div class="fasth3-rtx-colhead"><b>Pruned FastH3</b><span>MLX INT6 · M4 Max</span></div>
+  <div class="fasth3-rtx-colhead"><b>Pruned FastH3</b><span>FP8 · RTX 4090</span></div>
+  <div class="fasth3-rtx-rowhead">Ceramics</div>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="models/ceramics-v2-bf16.mp4">
+      <video controls playsinline preload="metadata" aria-label="FastH3 V2, BF16 · 4× GB200, Ceramics">
+        <source src="img/videos/models/ceramics-v2-bf16.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>FastH3 V2</b><span>— s</span></figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="models/ceramics-v2-nvfp4.mp4">
+      <video controls playsinline preload="metadata" aria-label="FastH3 V2, NVFP4 · RTX 5090, Ceramics">
+        <source src="img/videos/models/ceramics-v2-nvfp4.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>FastH3 V2</b><span>— s</span></figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="models/ceramics-pruned-nvfp4.mp4">
+      <video controls playsinline preload="metadata" aria-label="Pruned FastH3, NVFP4 · RTX 5090, Ceramics">
+        <source src="img/videos/models/ceramics-pruned-nvfp4.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>Pruned FastH3</b><span>— s</span></figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="models/ceramics-pruned-int6.mp4">
+      <video controls playsinline preload="metadata" aria-label="Pruned FastH3, MLX INT6 · M4 Max, Ceramics">
+        <source src="img/videos/models/ceramics-pruned-int6.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>Pruned FastH3</b><span>— s</span></figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="models/ceramics-pruned-fp8.mp4">
+      <video controls playsinline preload="metadata" aria-label="Pruned FastH3, FP8 · RTX 4090, Ceramics">
+        <source src="img/videos/models/ceramics-pruned-fp8.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>Pruned FastH3</b><span>— s</span></figcaption>
+  </figure>
+  <div class="fasth3-rtx-rowhead">Harbor</div>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="models/harbor-v2-bf16.mp4">
+      <video controls playsinline preload="metadata" aria-label="FastH3 V2, BF16 · 4× GB200, Harbor">
+        <source src="img/videos/models/harbor-v2-bf16.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>FastH3 V2</b><span>— s</span></figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="models/harbor-v2-nvfp4.mp4">
+      <video controls playsinline preload="metadata" aria-label="FastH3 V2, NVFP4 · RTX 5090, Harbor">
+        <source src="img/videos/models/harbor-v2-nvfp4.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>FastH3 V2</b><span>— s</span></figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="models/harbor-pruned-nvfp4.mp4">
+      <video controls playsinline preload="metadata" aria-label="Pruned FastH3, NVFP4 · RTX 5090, Harbor">
+        <source src="img/videos/models/harbor-pruned-nvfp4.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>Pruned FastH3</b><span>— s</span></figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="models/harbor-pruned-int6.mp4">
+      <video controls playsinline preload="metadata" aria-label="Pruned FastH3, MLX INT6 · M4 Max, Harbor">
+        <source src="img/videos/models/harbor-pruned-int6.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>Pruned FastH3</b><span>— s</span></figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="models/harbor-pruned-fp8.mp4">
+      <video controls playsinline preload="metadata" aria-label="Pruned FastH3, FP8 · RTX 4090, Harbor">
+        <source src="img/videos/models/harbor-pruned-fp8.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>Pruned FastH3</b><span>— s</span></figcaption>
+  </figure>
+  <div class="fasth3-rtx-rowhead">Action</div>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="models/action-v2-bf16.mp4">
+      <video controls playsinline preload="metadata" aria-label="FastH3 V2, BF16 · 4× GB200, Action">
+        <source src="img/videos/models/action-v2-bf16.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>FastH3 V2</b><span>— s</span></figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="models/action-v2-nvfp4.mp4">
+      <video controls playsinline preload="metadata" aria-label="FastH3 V2, NVFP4 · RTX 5090, Action">
+        <source src="img/videos/models/action-v2-nvfp4.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>FastH3 V2</b><span>— s</span></figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="models/action-pruned-nvfp4.mp4">
+      <video controls playsinline preload="metadata" aria-label="Pruned FastH3, NVFP4 · RTX 5090, Action">
+        <source src="img/videos/models/action-pruned-nvfp4.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>Pruned FastH3</b><span>— s</span></figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="models/action-pruned-int6.mp4">
+      <video controls playsinline preload="metadata" aria-label="Pruned FastH3, MLX INT6 · M4 Max, Action">
+        <source src="img/videos/models/action-pruned-int6.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>Pruned FastH3</b><span>— s</span></figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="models/action-pruned-fp8.mp4">
+      <video controls playsinline preload="metadata" aria-label="Pruned FastH3, FP8 · RTX 4090, Action">
+        <source src="img/videos/models/action-pruned-fp8.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>Pruned FastH3</b><span>— s</span></figcaption>
+  </figure>
+</div>
+</div>
+
+<div class="fasth3-rtx-todo"><b>TODO (clips).</b> Fill <code>img/videos/models/&lt;prompt&gt;-&lt;model&gt;.mp4</code> for the prompts <code>latency-ceramics-005</code>, <code>latency-harbor-005</code> and one action prompt, with the shipping checkpoint. Replace each "— s" with that clip's end-to-end time.</div>
+
+## The same clip on every machine
+
+<div class="fasth3-rtx-grid fasth3-rtx-grid--devices">
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="devices/ceramics-gb200x4.mp4">
+      <video controls playsinline preload="metadata" aria-label="4× GB200, ceramics">
+        <source src="img/videos/devices/ceramics-gb200x4.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>4× GB200</b><span>baseline · NVFP4 · 4.3 s</span></figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="devices/ceramics-pro6000.mp4">
+      <video controls playsinline preload="metadata" aria-label="RTX PRO 6000, ceramics">
+        <source src="img/videos/devices/ceramics-pro6000.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>RTX PRO 6000</b><span>96 GB · NVFP4 · 15.1 s</span></figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="devices/ceramics-rtx5090.mp4">
+      <video controls playsinline preload="metadata" aria-label="RTX 5090, ceramics">
+        <source src="img/videos/devices/ceramics-rtx5090.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>RTX 5090</b><span>32 GB · NVFP4 · 17.4 s</span></figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="devices/ceramics-rtx4090.mp4">
+      <video controls playsinline preload="metadata" aria-label="RTX 4090, ceramics">
+        <source src="img/videos/devices/ceramics-rtx4090.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>RTX 4090</b><span>24 GB · FP8 · 41.8 s</span></figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="devices/ceramics-rtx4090-16gb.mp4">
+      <video controls playsinline preload="metadata" aria-label="RTX 4090, 16 GB cap, ceramics">
+        <source src="img/videos/devices/ceramics-rtx4090-16gb.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>RTX 4090, 16 GB cap</b><span>FP8 · 10 s clip · 104.0 s</span></figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="devices/ceramics-rtx4090-12gb.mp4">
+      <video controls playsinline preload="metadata" aria-label="RTX 4090, 12 GB cap, ceramics">
+        <source src="img/videos/devices/ceramics-rtx4090-12gb.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>RTX 4090, 12 GB cap</b><span>FP8 · 10 s clip · 107.3 s</span></figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="devices/ceramics-spark.mp4">
+      <video controls playsinline preload="metadata" aria-label="DGX Spark, ceramics">
+        <source src="img/videos/devices/ceramics-spark.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>DGX Spark</b><span>128 GB unified · NVFP4 · 134.5 s</span></figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="devices/ceramics-m4max.mp4">
+      <video controls playsinline preload="metadata" aria-label="M4 Max, ceramics">
+        <source src="img/videos/devices/ceramics-m4max.mp4" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>M4 Max</b><span>36 GB unified · MLX INT6 · pending</span></figcaption>
+  </figure>
+</div>
+
+<div class="fasth3-rtx-todo"><b>TODO (clips).</b> Fill <code>img/videos/devices/ceramics-&lt;device&gt;.mp4</code> from the benchmark runs. The 4090 memory-cap clips are 10 s; all others are 5 s.</div>
 
 ## Benchmark results
 
@@ -50,32 +257,13 @@ All times in this post are **end-to-end** times. The measurement starts when the
 
 The server is warm. One untimed generation completes compilation first. Then each of the two benchmark prompts runs two times, and we report the median of these four runs. No frames are dropped, and no preview decoder is used.
 
-We use two clip settings, both at 24 fps:
+We use three clip settings, all at 24 fps: 832×480 for 5 s (124 frames) and 10 s (243 frames), and 1344×768 for 10 s (243 frames). Four GB200s are the data-center baseline. Every other row is a single machine.
 
-- **480p, 5 s**: 832×480, 124 frames.
-- **768p, 10 s**: 1344×768, 243 frames.
-
-<div class="fasth3-rtx-table">
-
-| Hardware | Memory | Model and format | 480p, 5 s | 768p, 10 s |
-|---|---|---|---:|---:|
-| **1× RTX 5090** | 32 GB | FastH3 V1 4-step, NVFP4 | **12.9 s** | **48.0 s** |
-| **1× RTX 5090** | 32 GB | Pruned FastH3 8-step, NVFP4 | **17.4 s** | **80.5 s** |
-| 1× RTX 5090 | 32 GB | FastH3 V2 8-step, NVFP4 (October 2) | — | 90.1 s |
-| **1× RTX 4090** | 24 GB | Pruned FastH3 8-step, FP8 | **41.8 s** | <span class="fasth3-rtx-pending">TODO</span> |
-| 1× RTX PRO 6000 | 96 GB | FastH3 V1 4-step, NVFP4 MLP | 10.1 s | 49.4 s |
-| 1× RTX PRO 6000 | 96 GB | Pruned FastH3 8-step, NVFP4 MLP | 15.1 s | 83.9 s |
-| 1× DGX Spark | 128 GB unified | Pruned FastH3 8-step, NVFP4 | 134.5 s | — |
-| 2× DGX Spark | 128 GB unified each | Pruned FastH3 8-step, NVFP4 | 78.3 s | — |
-| Apple M4 Max | 36 GB unified | <span class="fasth3-rtx-pending">TODO (Track C): INT6 medians running</span> | | |
-
-</div>
-
-{{< image src="img/fig_e2e.svg" alt="Horizontal bars of end-to-end seconds. 480p, 5 s: RTX PRO 6000 V1 10.1, RTX 5090 V1 12.9, PRO 6000 pruned 15.1, 5090 pruned 17.4, RTX 4090 pruned FP8 41.8. 768p, 10 s: 5090 V1 48.0, PRO 6000 V1 49.4, 5090 pruned 80.5, PRO 6000 pruned 83.9, 5090 V2 90.1. A dashed line marks the clip's own length." width="100%" title="Figure 1. End-to-end time per clip on one GPU. The dashed line is the length of the clip itself." >}}
+{{< image src="img/fig_e2e.svg" alt="Thin horizontal bars of end-to-end seconds on a log scale, pruned FastH3 8-step unless noted. 832×480, 5 s: 4× GB200 baseline 4.3, RTX PRO 6000 15.1, RTX 5090 17.4, RTX 4090 FP8 41.8, two DGX Sparks 78.3, one DGX Spark 134.5, M4 Max pending. 832×480, 10 s: RTX 4090 79.7, 4090 with a 16 GB cap 104.0, with a 12 GB cap 107.3, two Sparks 164.5, one Spark 277.3. 1344×768, 10 s: 4× GB200 20.6, RTX 5090 80.5, RTX PRO 6000 83.9, RTX 5090 FastH3 V2 90.1, RTX 4090 pending. A dashed line marks each clip's own length." width="100%" title="Figure 1. End-to-end time per clip, pruned FastH3 8-step unless noted. The dashed line is the length of the clip itself." >}}
 
 <div class="fasth3-rtx-todo"><b>TODO before publishing.</b> (1) 4090 at 768p, 10 s: the last verified run is 279.9 s, before the current kernels; re-measure. (2) RTX PRO 6000 rows use the MLP-only FP4 export; re-run with the full-FP4 export the 5090 uses. (3) Decide which pruned checkpoint ships; all pruned numbers here are checkpoint 300. (4) Mac row from Track C.</div>
 
-V1 is the 4-step model from the [FastH3 V1 release](/blogs/fasth3-preview/). It uses half the denoising steps of the 8-step models. Thus V1 is the fastest option on all GPUs. Pruned FastH3 is the 8-step option, and it needs less memory than V2.
+Pruned FastH3 is the speed default. FastH3 V2 keeps all 50 blocks and is the quality reference; on a 5090 it takes 90.1 s for the 10 s, 768p clip, against 80.5 s for the pruned model.
 
 ## Why H3 does not fit on one GPU
 
@@ -195,10 +383,10 @@ The transfer of frames out of the GPU workers and the MP4 write take another 5.7
 | Hardware | Model | Hugging Face |
 |---|---|---|
 | RTX 5090, RTX PRO 6000, DGX Spark (Blackwell) | Pruned FastH3, 8-step, NVFP4 | `FastVideo/FastH3-Pruned-8Step-NVFP4full-ckpt300` |
-| Same, fastest | FastH3 V1, 4-step, NVFP4 | `FastVideo/FastVideo-FastH3-4-Step-V1-NVFP4full` |
 | RTX 4090, 16 GB and 12 GB GPUs | Pruned FastH3, 8-step, FP8 | `FastVideo/FastH3-Pruned-8Step-FP8-ckpt300` |
 | Apple Silicon (convert locally to MLX) | Pruned FastH3, 8-step, BF16 | `FastVideo/FastH3-Pruned-8Step-BF16-ckpt300` |
-| Full quality, data-center GPUs | FastH3 V2, 8-step, NVFP4 | [`FastVideo/FastVideo-FastH3-8-Step-V2-NVFP4`](https://huggingface.co/FastVideo/FastVideo-FastH3-8-Step-V2-NVFP4) |
+| Full quality, Blackwell GPUs | FastH3 V2, 8-step, NVFP4 | [`FastVideo/FastVideo-FastH3-8-Step-V2-NVFP4`](https://huggingface.co/FastVideo/FastVideo-FastH3-8-Step-V2-NVFP4) |
+| Full quality, data-center GPUs | FastH3 V2, 8-step, BF16 | `FastVideo/FastVideo-FastH3-8-Step-V2` |
 
 Each repository contains the NVFP4 text encoder, the lightweight VAE and a `fastvideo_inference.json` file. This file contains the sampling schedule. FastVideo reads it and uses the correct steps automatically.
 
@@ -236,26 +424,118 @@ FastVideo FastH3 builds on [MiniMax H3](https://huggingface.co/MiniMaxAI/MiniMax
 
 The lightweight decoder is the [LynnReal Lightweight Video VAE](https://huggingface.co/stdstu123/LynnReal-Onmi-light-vae) ([paper](https://arxiv.org/abs/2609.15863), [code](https://github.com/LynnReal-AI/LynnReal-Omni)). We load it with the INT8 weights from [Kijai](https://huggingface.co/Kijai)'s [MiniMax-H3-experimental](https://huggingface.co/Kijai/MiniMax-H3-experimental). We thank both.
 
-We thank the NVIDIA Enterprise Products team (Pengcheng Li, Cliff Woolley) for the Video Sparse Attention kernel. We also thank the FlashInfer and NVIDIA Model Optimizer teams for the FP4 kernels and calibration tools. The FP4 sparse attention on RTX GPUs builds on [SageAttention](https://github.com/thu-ml/SageAttention). Ollin Boer Bohan's [TAEH3](https://github.com/madebyollin/taehv) is the fast preview decoder.
+We thank the NVIDIA Enterprise Products team (Pengcheng Li and Cliff Woolley) for the Video Sparse Attention kernel. We also thank the FlashInfer and NVIDIA Model Optimizer teams for the FP4 kernels and calibration tools. The FP4 sparse attention on RTX GPUs builds on [SageAttention](https://github.com/thu-ml/SageAttention). Ollin Boer Bohan's [TAEH3](https://github.com/madebyollin/taehv) is the fast preview decoder.
 
 The FastVideo Team collaborated closely with [Nuva Lab](https://nuvalab.ai/), [NVIDIA FastGen](https://github.com/NVlabs/FastGen) (Julius Berner, Chao Liu, Arash Vahdat) and the NVIDIA Enterprise Products team on [FastH3](/blogs/fasth3-preview/). We also thank the [vLLM project](https://vllm.ai/), [NVIDIA](https://www.nvidia.com/en-us/) and [MBZUAI](https://mbzuai.ac.ae/) for their continued sponsorship and support of FastVideo.
 
 ## FastVideo team
 
-**Contributor:** Aryan Kumar
+**Contributor:** [Aryan Kumar](https://github.com/aryan5v)
 <a href="https://github.com/aryan5v" aria-label="Aryan Kumar GitHub"><i class="fab fa-github"></i></a>
 <a href="https://www.linkedin.com/in/aryan-kumar01" aria-label="Aryan Kumar LinkedIn"><i class="fab fa-linkedin"></i></a>
 <a href="https://x.com/aryan_xv" aria-label="Aryan Kumar X"><i class="fab fa-x-twitter"></i></a>  
-**Tech lead:** Will Lin
+**Tech lead:** [Will Lin](https://github.com/SolitaryThinker)
 <a href="https://github.com/SolitaryThinker" aria-label="Will Lin GitHub"><i class="fab fa-github"></i></a>
 <a href="https://www.linkedin.com/in/will-lin-294920100" aria-label="Will Lin LinkedIn"><i class="fab fa-linkedin"></i></a>
 <a href="https://x.com/wlsaidhi" aria-label="Will Lin X"><i class="fab fa-x-twitter"></i></a>  
-**Advisor:** Hao Zhang
+**Advisor:** [Hao Zhang](https://github.com/zhisbug)
 <a href="https://github.com/zhisbug" aria-label="Hao Zhang GitHub"><i class="fab fa-github"></i></a>
 <a href="https://www.linkedin.com/in/haozhangml" aria-label="Hao Zhang LinkedIn"><i class="fab fa-linkedin"></i></a>
 <a href="https://x.com/haozhangml" aria-label="Hao Zhang X"><i class="fab fa-x-twitter"></i></a>
 
 <style>
+.fasth3-rtx-article .fasth3-rtx-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.fasth3-rtx-article .fasth3-rtx-grid {
+  display: grid;
+  margin: 1.4rem 0 1.8rem;
+  gap: 0.9rem 0.55rem;
+  align-items: start;
+}
+
+.fasth3-rtx-article .fasth3-rtx-grid--models {
+  min-width: 720px;
+  grid-template-columns: 4.6rem repeat(5, minmax(0, 1fr));
+}
+
+.fasth3-rtx-article .fasth3-rtx-grid--devices {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.fasth3-rtx-article .fasth3-rtx-colhead,
+.fasth3-rtx-article .fasth3-rtx-rowhead {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-size: 0.8rem;
+  line-height: 1.3;
+}
+
+.fasth3-rtx-article .fasth3-rtx-colhead span {
+  color: var(--secondary);
+}
+
+.fasth3-rtx-article .fasth3-rtx-rowhead {
+  align-self: center;
+  font-weight: 600;
+}
+
+.fasth3-rtx-article .fasth3-rtx-clip {
+  min-width: 0;
+  margin: 0;
+}
+
+.fasth3-rtx-article .fasth3-rtx-frame {
+  position: relative;
+  aspect-ratio: 832 / 480;
+  border: 1.5px dashed var(--border);
+  border-radius: 8px;
+}
+
+.fasth3-rtx-article .fasth3-rtx-frame::before {
+  content: "pending · " attr(data-file);
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 0.4rem;
+  color: var(--secondary);
+  font-size: 0.68rem;
+  text-align: center;
+}
+
+.fasth3-rtx-article .fasth3-rtx-frame video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  background: transparent;
+}
+
+.fasth3-rtx-article .fasth3-rtx-clip > figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.45rem;
+  margin: 0.4rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.3;
+}
+
+.fasth3-rtx-article .fasth3-rtx-clip > figcaption span {
+  color: var(--secondary);
+}
+
+@media (max-width: 760px) {
+  .fasth3-rtx-article .fasth3-rtx-grid--devices {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .fasth3-rtx-article .fasth3-rtx-todo {
   margin: 1.4rem 0;
   padding: 0.85rem 1rem;
