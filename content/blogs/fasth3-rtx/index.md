@@ -51,7 +51,7 @@ Each row is one machine. The left clip is FastH3 V2 and the right clip is FastH3
         <source src="img/videos/rtx5090/v2-nvfp4-corgi-weather.mp4#t=0.1" type="video/mp4">
       </video>
     </div>
-    <figcaption><b>V2 · NVFP4</b><span>— s</span></figcaption>
+    <figcaption><b>V2 · NVFP4</b><span>19.6 s</span></figcaption>
   </figure>
   <figure class="fasth3-rtx-clip">
     <div class="fasth3-rtx-frame" data-file="rtx5090/trim-nvfp4-corgi-weather.mp4">
@@ -68,7 +68,7 @@ Each row is one machine. The left clip is FastH3 V2 and the right clip is FastH3
         <source src="img/videos/rtx-pro-6000/v2-nvfp4-corgi-weather.mp4#t=0.1" type="video/mp4">
       </video>
     </div>
-    <figcaption><b>V2 · NVFP4</b><span>— s</span></figcaption>
+    <figcaption><b>V2 · NVFP4</b><span>13.5 s</span></figcaption>
   </figure>
   <figure class="fasth3-rtx-clip">
     <div class="fasth3-rtx-frame" data-file="rtx-pro-6000/trim-nvfp4-corgi-weather.mp4">
@@ -143,8 +143,8 @@ We report two numbers per machine: a 5 s clip at 832×480 and a 5 s clip at 1344
 | Machine | Memory | V2, 480p | Trim, 480p | V2, 768p | Trim, 768p |
 |---|---|---:|---:|---:|---:|
 | 4× GB200 | data-center reference | — | 4.3 s | — | — |
-| RTX PRO 6000 | 96 GB | — | 12.2 s | — | 32.5 s |
-| RTX 5090 | 32 GB | — | 19.1 s | — | 39.6 s |
+| RTX PRO 6000 | 96 GB | 13.5 s | 12.2 s | 36.5 s | 32.5 s |
+| RTX 5090 | 32 GB | 19.6 s | 19.1 s | 42.4 s | 39.6 s |
 | RTX 4090 | 24 GB | — | 43.9 s | — | — |
 | RTX 4090, 16 GB limit | 16 GB | — | — | — | — |
 | RTX 4090, 12 GB limit | 12 GB | — | — | — | — |
