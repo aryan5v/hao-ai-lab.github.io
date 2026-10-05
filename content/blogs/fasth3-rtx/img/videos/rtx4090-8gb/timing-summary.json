@@ -1,0 +1,10 @@
+{
+  "device": "rtx4090-8gb",
+  "frames": 124,
+  "seed": 1234,
+  "guidance": 1.0,
+  "dmd_forwards": 8,
+  "definition": "Wall time from prompt to finished MP4, including text encoding, denoising, video/audio decode and MP4 write; model construction and the first cold request excluded.",
+  "capacity_note": "Memory tiers are capacity emulation on a 4090, not measured smaller-GPU throughput.",
+  "warm_averages": []
+}
