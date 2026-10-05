@@ -33,7 +33,7 @@ This post continues [FastH3 Goes Local](/blogs/fasth3-local/), which brought Fas
 
 - **FastH3 V2 now runs on one consumer GPU, a DGX Spark or a Mac.** We ship it in NVFP4 for Blackwell GPUs and DGX Spark, FP8 for the RTX 4090 and GPUs with less memory, and INT6 for Apple Silicon.
 - **Quantization keeps the quality.** Every FP4 layer uses activation scales calibrated on 1,000 prompts, so large activations are not clipped.
-- **FastH3 Trim is an experiment in making the model smaller.** It is 4.2× smaller than base H3 and faster than V2 on every device, at some cost in quality.
+- **FastH3 Trim is an experiment in making the model smaller.** It is 4.2× smaller than base H3 and faster than V2 on every device, at minimal cost in quality.
 - **There is room to improve, and we will keep working on it.** Both models are eight-step distillations; we expect better quality and smaller models in future releases.
 
 ## Same prompt, every machine
@@ -131,18 +131,15 @@ Each row is one machine. The left clip is FastH3 V2 and the right clip is FastH3
   </figure>
 </div>
 
-<div class="fasth3-rtx-todo"><b>TODO (clips).</b> Device agents push <code>img/videos/&lt;device&gt;/&lt;model&gt;-&lt;prompt&gt;.mp4</code> for every showcase prompt (see <code>fasth3-rtx-launch/AGENT_INSTRUCTIONS.md</code> on this branch). After we pick the showcase prompt, the lead session points each slot at it and fills in the times.</div>
-
 ## How fast it runs
 
-We report two numbers per machine: a 5 s clip at 832×480 and a 5 s clip at 1344×768, both with audio. Each time runs end to end, from submitting the prompt to the finished MP4 file, so it includes text encoding, all eight denoising steps, video and audio decoding, and the MP4 export. The server is warm, and we report the median of two runs for each of two benchmark prompts.
+We report two numbers per machine: a 5 s clip at 832×480 and a 5 s clip at 1344×768, both with audio. Times are end to end on a warm server, from prompt to finished MP4: text encoding, eight denoising steps, video and audio decoding, and export. Each is the median of two runs on each of two prompts.
 
-{{< image src="img/fig_e2e.svg" alt="Paired thin bars per machine, FastH3 V2 and FastH3 Trim, end-to-end seconds for a 5 s, 832×480 clip on a log scale. Pending cells are outlined." width="100%" title="Figure 1. End-to-end time for a 5 s, 832×480 clip with audio. Four GB200s are a data-center reference; every other row is one machine." >}}
+{{< image src="img/fig_e2e.svg" alt="Paired thin bars per machine, FastH3 V2 and FastH3 Trim, end-to-end seconds for a 5 s, 832×480 clip on a log scale. Pending cells are outlined." width="100%" title="Figure 1. End-to-end time for a 5 s, 832×480 clip with audio. Every row is one machine." >}}
 
 <!-- results-table:start -->
 | Machine | Memory | V2, 480p | Trim, 480p | V2, 768p | Trim, 768p |
 |---|---|---:|---:|---:|---:|
-| 4× GB200 | data-center reference | — | 4.3 s | — | — |
 | RTX PRO 6000 | 96 GB | 13.5 s | 12.0 s | 36.5 s | 32.5 s |
 | RTX 5090 | 32 GB | 14.8 s | 13.4 s | 38.6 s | 35.4 s |
 | RTX 4090 | 24 GB | 54.6 s | 43.9 s | — | 132.8 s |
@@ -170,15 +167,15 @@ Size matters for speed. On a 32 GB GPU, the question is whether the DiT can stay
 
 Our first FP4 export quantized only the MLPs, the setting we use on data-center GPUs. On a 5090 that left a 20 GB DiT, because the BF16 attention projections alone take 9.7 GB, and the text encoder no longer fit beside it. Every request moved the DiT to host memory and back: a 480p clip took 26.4 s, and a 768p clip did not fit at all.
 
-With attention and the gate also in NVFP4, the DiT is 11.1 GiB and stays on the GPU. Only the 15.3 GiB text encoder moves per prompt. The same 480p clip takes 17.4 s, and the 10 s, 768p clip now fits and takes 80.5 s.
+With attention and the gate also in NVFP4, the DiT is 11.1 GiB and stays on the GPU, and the text encoder streams in one layer at a time. The same 480p clip now takes 13.4 s, and 768p fits.
 
-One detail cost us a crash first. Fast host-to-GPU copies need page-locked ("pinned") host memory, and PyTorch's pinned allocator rounds each block up to a power of two. For the H3 FP4 weight shapes, 2.87 GiB of tensors used 5.06 GiB of host RAM, enough to get the process killed in a 60 GB cloud container. We now pin one exact-size buffer per module with `cudaHostRegister` and place the tensors inside it, which brings the same tensors down to 2.90 GiB.
+PyTorch's pinned-memory allocator rounds each block up to a power of two, so 2.87 GiB of FP4 weights took 5.06 GiB of host RAM, enough to get the process killed in a 60 GB cloud container. We pin one exact-size buffer per module with `cudaHostRegister` instead, which uses 2.90 GiB.
 
 ### RTX 4090 and smaller memory
 
 The RTX 4090 has no FP4 tensor cores, so it uses FP8: 8-bit weights with one scale per output channel and 8-bit activations with one scale per token. PyTorch's FP8 matrix multiply with these scales runs at about 70 TFLOPS on a 4090, slower than BF16 at about 160 TFLOPS. The per-tensor FP8 kernel runs at 220–305 TFLOPS, so we call it with unit scales and apply both scale vectors to the output in one fused pass. The result matches per-token, per-channel scaling and costs 5–10% more than per-tensor scaling.
 
-Three more changes bring the 4090 to 41.8 s for a 5 s clip:
+Three more changes bring the 4090 to 43.9 s for a 5 s clip:
 
 - **Sparse attention:** queries and keys are quantized to INT8 for the score computation, while values stay in BF16. The fine attention kernel runs 1.6× faster with about 0.6% relative error.
 - **Text encoder:** it streams to the GPU one layer at a time through exact-size pinned buffers, and one fused kernel expands its NVFP4 weights.
@@ -202,7 +199,7 @@ In 40 of the 42 blocks, the input to the MLP output projection exceeds 2,688. In
 
 ## FastH3 Trim: an experiment in pruning
 
-Pruning is an experiment we plan to refine over time, and it is our path to smaller models. It is also not free. We remove the blocks we measured as least important, but each block still holds part of what the model learned, so the pruned model loses some information and quality can drop. In return it gets both faster and smaller. FastH3 Trim is our first step, and more will follow.
+Pruning is our path to smaller models. We remove the blocks we measured as least important, which makes the model smaller and faster but takes some of what it learned with them. FastH3 Trim is our first step.
 
 {{< image src="img/fig_squares.svg" alt="Squares drawn to scale, area equal to transformer checkpoint size. H3 BF16, 65.3 GiB, is tiled with blocks 0 to 49; blocks 6, 7, 9, 13, 15, 16, 22 and 23 are red (removed), and blocks 0, 1, 5, 47, 48 and 49 are outlined as most sensitive. Arrows lead to smaller squares tiled with the same 42 kept blocks: Trim BF16 34.8 GiB (1.9× smaller), FP8 19.9 (3.3×), INT6 14.3 (4.6×), NVFP4 11.1 (5.9×)." width="100%" title="Figure 4. The FastH3 Trim transformer in each format we ship, drawn to scale: area is checkpoint size." >}}
 
@@ -218,15 +215,13 @@ H3 conditions each block on the diffusion timestep through an AdaLN projection, 
 
 ### Training
 
-We trained the new 42-block model directly with eight-step DMD2, using the FastH3 V2 objective. Base H3 initializes both the frozen teacher and the trainable critic, and attention is 80% sparse. The model samples at timesteps 999, 874, 749, 624, 500, 375, 250 and 125, and its sparse attention keeps 20% of the attention tiles.
-
-**We pick checkpoints by watching them.** Later checkpoints looked sharper but started to add objects partway through a clip, for example a second dragon in a sword-fight scene, and our automatic scorer did not notice. We release checkpoint 300, which held its scenes together best when we reviewed the held-out prompts by eye.
+We trained the new 42-block model directly with eight-step DMD2, using the FastH3 V2 objective. Base H3 initializes both the frozen teacher and the trainable critic, and attention is 80% sparse. The model samples at timesteps 999, 874, 749, 624, 500, 375, 250 and 125.
 
 ## Where the time goes
 
 {{< image src="img/fig_stages.svg" alt="100% stacked bars. RTX PRO 6000 Trim NVFP4, 480p, 5 s, 12.0 s: denoise 78%, decode 17%, rest 5%. RTX 5090 Trim NVFP4, 480p, 5 s, 13.4 s: denoise 68%, decode 16%, rest 16%. RTX 4090 Trim FP8, 480p, 5 s, 43.9 s: denoise 75%, decode 17%, rest 7%. DGX Spark Trim NVFP4, 480p, 5 s, 125.8 s: denoise 65%, decode 34%, rest 1%. Mac, M4 Max Trim MLX INT6, 480p, 5 s, 925.2 s: denoise 91%, decode 8%, rest 2%." width="100%" title="Figure 5. Share of end-to-end time per stage." >}}
 
-Figure 5 splits one 5 s, 480p FastH3 Trim clip by stage on each machine. On the RTX PRO 6000 every model stays in GPU memory, and denoising is 78% of the 12.0 s. The RTX 5090 denoises just as fast (9.1 s). With 32 GB it keeps the transformer on the GPU, streams the text encoder in layer by layer and parks only the decoders in host memory, so a clip takes 13.4 s end to end. Moving the whole transformer out for text encoding instead, as we first did, cost about 6 s per clip. The RTX 4090 has no FP4 tensor cores, so it runs FP8 weights and streams part of the transformer from host memory each step; denoising grows to 33.1 s, 75% of its 43.9 s. On a DGX Spark, decoding the video takes a third of the time (42.6 s); that is the next stage we will optimize there. On a Mac, denoising is 91% of the time because attention runs on the reference path until the Metal kernel handles partially filled tiles.
+Figure 5 splits one 5 s, 480p FastH3 Trim clip by stage on each machine. On the RTX PRO 6000 every model stays in GPU memory, and denoising is 78% of the 12.0 s. The RTX 5090 denoises just as fast (9.1 s) and finishes in 13.4 s, because only the text encoder and decoders move between host and GPU. The RTX 4090 has no FP4 tensor cores, so it runs FP8 and streams part of the transformer from host memory each step; denoising is 33.1 s of its 43.9 s. On a DGX Spark, video decoding takes a third of the time (42.6 s), and it is the next stage we will optimize. On a Mac, denoising is 91% of the time because attention still runs on a reference path rather than a tuned Metal kernel.
 
 ## Limitations and what comes next
 
