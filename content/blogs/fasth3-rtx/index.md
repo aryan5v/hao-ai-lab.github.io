@@ -38,7 +38,7 @@ This post continues [FastH3 Goes Local](/blogs/fasth3-local/), which brought Fas
 
 ## Same prompt, every machine
 
-Each row is one machine. The left clip is FastH3 V2 and the right clip is FastH3 Trim, from the same prompt and seed at 832×480 for 5 s with audio. Turn the audio on.
+Each row is one machine. The left clip is FastH3 V2 and the right clip is FastH3 Trim, from the same prompt and seed at 832×480 for 5 s with audio. Turn the audio on. Three more prompts are under [More samples](#more-samples).
 
 <div class="fasth3-rtx-gallery">
   <div></div>
@@ -127,7 +127,7 @@ Each row is one machine. The left clip is FastH3 V2 and the right clip is FastH3
         <source src="img/videos/m4max/trim-int6-corgi-weather.mp4#t=0.1" type="video/mp4">
       </video>
     </div>
-    <figcaption><b>Trim · INT6</b><span>923.5 s</span></figcaption>
+    <figcaption><b>Trim · INT6</b><span>925.2 s</span></figcaption>
   </figure>
 </div>
 
@@ -150,7 +150,7 @@ We report two numbers per machine: a 5 s clip at 832×480 and a 5 s clip at 1344
 | RTX 4090, 12 GB limit | 12 GB | — | — | — | — |
 | DGX Spark | 128 GB unified | 141.4 s | 125.8 s | — | 340.1 s |
 | 2× DGX Spark | 128 GB each | 87.2 s | 78.3 s | — | — |
-| Mac, M4 Max | 36 GB unified | — | 923.5 s | — | — |
+| Mac, M4 Max | 36 GB unified | — | 925.2 s | — | — |
 <!-- results-table:end -->
 <div class="fasth3-rtx-todo"><b>TODO (numbers).</b> Device agents push <code>results/&lt;device&gt;.json</code>; Figure 1 is generated from those files. Dashes are pending.</div>
 
@@ -224,7 +224,7 @@ We trained the new 42-block model directly with eight-step DMD2, using the FastH
 
 ## Where the time goes
 
-{{< image src="img/fig_stages.svg" alt="100% stacked bars. RTX PRO 6000 Trim NVFP4, 480p, 5 s, 12.0 s: denoise 78%, decode 17%, rest 5%. RTX 5090 Trim NVFP4, 480p, 5 s, 19.1 s: denoise 47%, decode 11%, rest 41%. RTX 4090 Trim FP8, 480p, 5 s, 43.9 s: denoise 75%, decode 17%, rest 7%. DGX Spark Trim NVFP4, 480p, 5 s, 125.8 s: denoise 65%, decode 34%, rest 1%. Mac, M4 Max Trim MLX INT6, 480p, 5 s, 923.5 s: denoise 91%, decode 8%, rest 2%." width="100%" title="Figure 5. Share of end-to-end time per stage." >}}
+{{< image src="img/fig_stages.svg" alt="100% stacked bars. RTX PRO 6000 Trim NVFP4, 480p, 5 s, 12.0 s: denoise 78%, decode 17%, rest 5%. RTX 5090 Trim NVFP4, 480p, 5 s, 19.1 s: denoise 47%, decode 11%, rest 41%. RTX 4090 Trim FP8, 480p, 5 s, 43.9 s: denoise 75%, decode 17%, rest 7%. DGX Spark Trim NVFP4, 480p, 5 s, 125.8 s: denoise 65%, decode 34%, rest 1%. Mac, M4 Max Trim MLX INT6, 480p, 5 s, 925.2 s: denoise 91%, decode 8%, rest 2%." width="100%" title="Figure 5. Share of end-to-end time per stage." >}}
 
 Figure 5 splits one 5 s, 480p FastH3 Trim clip by stage on each machine. On the RTX PRO 6000 every model stays in GPU memory, and denoising is 78% of the 12.0 s. The RTX 5090 denoises just as fast (9.0 s), but with 32 GB it parks the text encoder and decoders in host memory between stages. Text encoding takes 2.8 s, and moving modules and frames between host and GPU and writing the MP4 take about 5 s more, so 41% of its 19.1 s is spent outside denoising and decoding. The RTX 4090 has no FP4 tensor cores, so it runs FP8 weights and streams part of the transformer from host memory each step; denoising grows to 33.1 s, 75% of its 43.9 s. On a DGX Spark, decoding the video takes a third of the time (42.6 s); that is the next stage we will optimize there. On a Mac, denoising is 91% of the time because attention runs on the reference path until the Metal kernel handles partially filled tiles.
 
@@ -267,6 +267,77 @@ generator.generate_video(
 Swap in `FastVideo/FastVideo-FastH3-Trim-8-Step-NVFP4` for the faster experimental model.
 
 <div class="fasth3-rtx-todo"><b>TODO before publishing.</b> Link each repository to its Cookbook recipe.</div>
+
+## More samples
+
+Three more prompts on one RTX 5090, at the same settings as the gallery: 832×480, 5 s with audio, seed 1234. The left clip is FastH3 V2 and the right clip is FastH3 Trim.
+
+<div class="fasth3-rtx-gallery">
+  <div></div>
+  <div class="fasth3-rtx-colhead">FastH3 V2</div>
+  <div class="fasth3-rtx-colhead">FastH3 Trim</div>
+  <div class="fasth3-rtx-rowhead"><b>Street-food jingle</b><span>RTX 5090</span></div>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="rtx5090/v2-nvfp4-street-food-jingle.mp4">
+      <video controls playsinline preload="metadata" aria-label="FastH3 V2 on RTX 5090: Street-food jingle">
+        <source src="img/videos/rtx5090/v2-nvfp4-street-food-jingle.mp4#t=0.1" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>V2 · NVFP4</b><span>19.6 s</span></figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="rtx5090/trim-nvfp4-street-food-jingle.mp4">
+      <video controls playsinline preload="metadata" aria-label="FastH3 Trim on RTX 5090: Street-food jingle">
+        <source src="img/videos/rtx5090/trim-nvfp4-street-food-jingle.mp4#t=0.1" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>Trim · NVFP4</b><span>19.1 s</span></figcaption>
+  </figure>
+  <div class="fasth3-rtx-rowhead"><b>Pirate and parrot</b><span>RTX 5090</span></div>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="rtx5090/v2-nvfp4-parrot-pirate.mp4">
+      <video controls playsinline preload="metadata" aria-label="FastH3 V2 on RTX 5090: Pirate and parrot">
+        <source src="img/videos/rtx5090/v2-nvfp4-parrot-pirate.mp4#t=0.1" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>V2 · NVFP4</b><span>19.6 s</span></figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="rtx5090/trim-nvfp4-parrot-pirate.mp4">
+      <video controls playsinline preload="metadata" aria-label="FastH3 Trim on RTX 5090: Pirate and parrot">
+        <source src="img/videos/rtx5090/trim-nvfp4-parrot-pirate.mp4#t=0.1" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>Trim · NVFP4</b><span>19.1 s</span></figcaption>
+  </figure>
+  <div class="fasth3-rtx-rowhead"><b>Grandma DJ</b><span>RTX 5090</span></div>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="rtx5090/v2-nvfp4-grandma-dj.mp4">
+      <video controls playsinline preload="metadata" aria-label="FastH3 V2 on RTX 5090: Grandma DJ">
+        <source src="img/videos/rtx5090/v2-nvfp4-grandma-dj.mp4#t=0.1" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>V2 · NVFP4</b><span>19.6 s</span></figcaption>
+  </figure>
+  <figure class="fasth3-rtx-clip">
+    <div class="fasth3-rtx-frame" data-file="rtx5090/trim-nvfp4-grandma-dj.mp4">
+      <video controls playsinline preload="metadata" aria-label="FastH3 Trim on RTX 5090: Grandma DJ">
+        <source src="img/videos/rtx5090/trim-nvfp4-grandma-dj.mp4#t=0.1" type="video/mp4">
+      </video>
+    </div>
+    <figcaption><b>Trim · NVFP4</b><span>19.1 s</span></figcaption>
+  </figure>
+</div>
+
+<details>
+<summary>Full prompts</summary>
+<ul>
+<li><b>Weather corgi.</b> Live-action TV news parody, 16:9, bright studio lighting, 35mm lens, locked-off medium shot. A fluffy tan-and-white corgi with a tiny red bow tie sits upright behind a glossy news desk, a weather map of puffy clouds glowing on the screen behind it. [0-2 s] The corgi looks straight into the camera, ears perked, and says in a cheerful deep announcer voice, &quot;Tomorrow: one hundred percent chance of zoomies.&quot; [2-5 s] It tilts its head, its tongue flops out, and it gives one proud little bark as a short brassy news jingle plays. Sound: crisp studio voice, the jingle, the single bark. Only one corgi. No subtitles, no on-screen text, no watermark, no extra animals.</li>
+<li><b>Street-food jingle.</b> Documentary-style phone video, 16:9, sunny afternoon, phone held still at chest height. A cheerful street-food vendor in a green apron and white bandana stands behind a stall of golden fried snacks. [0-2 s] She smiles at the camera and claps her hands twice to set a rhythm, swaying gently. [2-5 s] She sings a bouncy jingle, &quot;Crispy, crunchy, ready to munch!&quot;, and finishes with a wink and a thumbs-up. Sound: her clear singing voice in a playful melody, two claps, sizzling oil and a soft market murmur. One vendor in focus, hands empty. No subtitles, no text, no watermark.</li>
+<li><b>Pirate and parrot.</b> Cinematic live-action, 16:9, golden hour on the deck of a wooden pirate ship, 50mm lens, locked-off medium shot. A weathered pirate captain with a braided beard, red bandana and long coat holds a rolled treasure map; a bright green parrot sits still on his shoulder. [0-2 s] He taps the map and declares in a gravelly voice, &quot;X marks the spot!&quot; [2-5 s] The parrot bobs its head and squawks back, &quot;Spot! Spot!&quot;, and the captain slowly turns to give it a tired look. Sound: his gravelly voice, the parrot&#x27;s squawk, creaking wood and soft waves. One captain and one parrot. No subtitles, no text, no watermark.</li>
+<li><b>Grandma DJ.</b> Cinematic live-action, 16:9, rooftop at night with neon pink and blue lights, 35mm lens, slow push-in. A grandmother with silver hair in a bun, round glasses and a sequined cardigan stands alone behind DJ turntables wearing big headphones. [0-2 s] She nods to a hip-hop beat and gives the vinyl a short, confident scratch. [2-5 s] She raises one hand, grins at the camera and the bass drops. Sound: record scratch, a punchy hip-hop beat with a heavy bass drop, a faint city hum. Only the grandmother, no crowd. No subtitles, no text, no watermark.</li>
+</ul>
+</details>
 
 ## Acknowledgements
 
