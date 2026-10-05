@@ -224,7 +224,7 @@ We trained the new 42-block model directly with eight-step DMD2, using the FastH
 
 ## Where the time goes
 
-{{< image src="img/fig_stages.svg" alt="100% stacked bars. RTX 4090 FastH3 Trim FP8 480p 5 s, 41.8 s: denoise 78%, decode 16%, rest 6%. RTX 4090 480p 10 s, 79.7 s: denoise 80%, decode 17%, rest 4%. 4× GB200 V1 768p 10 s, 15.5 s: denoise 37%, decode 25%, rest 38%." width="100%" title="Figure 5. Share of end-to-end time per stage." >}}
+{{< image src="img/fig_stages.svg" alt="100% stacked bars. RTX 5090 Trim NVFP4, 480p, 5 s, 19.1 s: denoise 47%, decode 11%, rest 41%. DGX Spark Trim NVFP4, 480p, 5 s, 125.8 s: denoise 65%, decode 34%, rest 1%. Mac, M4 Max Trim MLX INT6, 480p, 5 s, 923.5 s: denoise 91%, decode 8%, rest 2%." width="100%" title="Figure 5. Share of end-to-end time per stage." >}}
 
 On one 4090, denoising is about 80% of the end-to-end time. Once the model fits in GPU memory and denoising gets fast, the other stages take a larger share. On four GB200s, the four-step V1 model spends 9.8 s computing a 10 s, 768p clip: 5.7 s denoising, 3.8 s decoding across the four GPUs, and the rest on text encoding. Moving frames out of the GPU workers and writing the MP4 take another 5.7 s, and that is the next stage we will optimize.
 

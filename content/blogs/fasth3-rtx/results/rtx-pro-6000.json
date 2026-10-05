@@ -162,7 +162,10 @@
    "HEADLINE_DEVICE": "1x RTX PRO 6000"
   },
   "status": "ok",
-  "notes": "bench_headline 480p5s"
+  "notes": "bench_headline 480p5s",
+  "denoise_s": 10.86,
+  "decode_s": 2.05,
+  "text_encode_s": 0.12
  },
  {
   "device": "rtx-pro-6000",
@@ -195,7 +198,10 @@
    "HEADLINE_DEVICE": "1x RTX PRO 6000"
   },
   "status": "ok",
-  "notes": "bench_headline 768p5s"
+  "notes": "bench_headline 768p5s",
+  "denoise_s": 30.71,
+  "decode_s": 4.77,
+  "text_encode_s": 0.12
  },
  {
   "device": "rtx-pro-6000",
@@ -228,7 +234,10 @@
    "HEADLINE_DEVICE": "1x RTX PRO 6000"
   },
   "status": "ok",
-  "notes": "bench_headline 480p5s"
+  "notes": "bench_headline 480p5s",
+  "denoise_s": 10.92,
+  "decode_s": 2.05,
+  "text_encode_s": 0.12
  },
  {
   "device": "rtx-pro-6000",
@@ -261,6 +270,9 @@
    "HEADLINE_DEVICE": "1x RTX PRO 6000"
   },
   "status": "ok",
-  "notes": "bench_headline 768p5s"
+  "notes": "bench_headline 768p5s",
+  "denoise_s": 30.8,
+  "decode_s": 4.77,
+  "text_encode_s": 0.12
  }
 ]

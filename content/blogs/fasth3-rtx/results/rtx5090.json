@@ -32,7 +32,10 @@
    "HEADLINE_CLIP_PREFIX": "trim-nvfp4"
   },
   "status": "ok",
-  "notes": "bench_headline 480p5s"
+  "notes": "bench_headline 480p5s",
+  "denoise_s": 8.99,
+  "decode_s": 2.17,
+  "text_encode_s": 2.92
  },
  {
   "device": "rtx5090",
@@ -67,7 +70,10 @@
    "HEADLINE_CLIP_PREFIX": "trim-nvfp4"
   },
   "status": "ok",
-  "notes": "bench_headline 768p5s"
+  "notes": "bench_headline 768p5s",
+  "denoise_s": 25.85,
+  "decode_s": 5.17,
+  "text_encode_s": 2.94
  },
  {
   "device": "rtx5090",
@@ -102,7 +108,10 @@
    "HEADLINE_CLIP_PREFIX": "trim-nvfp4"
   },
   "status": "ok",
-  "notes": "bench_headline 480p5s"
+  "notes": "bench_headline 480p5s",
+  "denoise_s": 9.09,
+  "decode_s": 2.18,
+  "text_encode_s": 2.73
  },
  {
   "device": "rtx5090",
@@ -137,7 +146,10 @@
    "HEADLINE_CLIP_PREFIX": "trim-nvfp4"
   },
   "status": "ok",
-  "notes": "bench_headline 768p5s"
+  "notes": "bench_headline 768p5s",
+  "denoise_s": 26.08,
+  "decode_s": 5.18,
+  "text_encode_s": 2.83
  },
  {
   "device": "rtx5090",
@@ -173,7 +185,10 @@
    "HEADLINE_CLIP_PREFIX": "v2-nvfp4"
   },
   "status": "ok",
-  "notes": "bench_headline 480p5s; AdaLN projections replaced by a precomputed per-timestep table (pinning the 26 GB BF16 projections exceeds the pod's 60 GB host limit)"
+  "notes": "bench_headline 480p5s; AdaLN projections replaced by a precomputed per-timestep table (pinning the 26 GB BF16 projections exceeds the pod's 60 GB host limit)",
+  "denoise_s": 10.43,
+  "decode_s": 2.19,
+  "text_encode_s": 2.81
  },
  {
   "device": "rtx5090",
@@ -209,7 +224,10 @@
    "HEADLINE_CLIP_PREFIX": "v2-nvfp4"
   },
   "status": "ok",
-  "notes": "bench_headline 768p5s; AdaLN projections replaced by a precomputed per-timestep table (pinning the 26 GB BF16 projections exceeds the pod's 60 GB host limit)"
+  "notes": "bench_headline 768p5s; AdaLN projections replaced by a precomputed per-timestep table (pinning the 26 GB BF16 projections exceeds the pod's 60 GB host limit)",
+  "denoise_s": 30.21,
+  "decode_s": 5.19,
+  "text_encode_s": 2.81
  },
  {
   "device": "rtx5090",
@@ -245,7 +263,10 @@
    "HEADLINE_CLIP_PREFIX": "v2-nvfp4"
   },
   "status": "ok",
-  "notes": "bench_headline 480p5s; AdaLN projections replaced by a precomputed per-timestep table (pinning the 26 GB BF16 projections exceeds the pod's 60 GB host limit)"
+  "notes": "bench_headline 480p5s; AdaLN projections replaced by a precomputed per-timestep table (pinning the 26 GB BF16 projections exceeds the pod's 60 GB host limit)",
+  "denoise_s": 10.51,
+  "decode_s": 2.2,
+  "text_encode_s": 2.69
  },
  {
   "device": "rtx5090",
@@ -281,6 +302,9 @@
    "HEADLINE_CLIP_PREFIX": "v2-nvfp4"
   },
   "status": "ok",
-  "notes": "bench_headline 768p5s; AdaLN projections replaced by a precomputed per-timestep table (pinning the 26 GB BF16 projections exceeds the pod's 60 GB host limit)"
+  "notes": "bench_headline 768p5s; AdaLN projections replaced by a precomputed per-timestep table (pinning the 26 GB BF16 projections exceeds the pod's 60 GB host limit)",
+  "denoise_s": 30.32,
+  "decode_s": 5.19,
+  "text_encode_s": 2.69
  }
 ]
