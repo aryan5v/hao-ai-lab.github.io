@@ -244,13 +244,17 @@ All repositories are under the [FastVideo](https://huggingface.co/FastVideo) org
 ```python
 import os
 
+from huggingface_hub import hf_hub_download
+
+repo = "FastVideo/FastVideo-FastH3-8-Step-V2-NVFP4-Consumer"
 os.environ["FASTVIDEO_H3_PARK_MODULES"] = "vae,audio_vae"  # keep the transformer on the GPU during text encoding
 os.environ["FASTVIDEO_H3_ENCODER_LAYERWISE"] = "1"  # stream the text encoder layer by layer
+os.environ["FASTVIDEO_H3_ADALN_TABLE"] = hf_hub_download(repo, "transformer/adaln_tables.pt")  # skip 26 GB of AdaLN weights
 
 from fastvideo import VideoGenerator
 
 generator = VideoGenerator.from_config({
-    "model_path": "FastVideo/FastVideo-FastH3-8-Step-V2-NVFP4-Consumer",
+    "model_path": repo,
     "engine": {
         "num_gpus": 1,
         "quantization": {"transformer_quant": "NVFP4", "layer_profile": "h3_dit_vsa"},
@@ -264,7 +268,7 @@ generator.generate_video(
 )
 ```
 
-Swap in `FastVideo/FastVideo-FastH3-Trim-8-Step-NVFP4` for the faster experimental model.
+Swap in `FastVideo/FastVideo-FastH3-Trim-8-Step-NVFP4` for the faster experimental model, without the AdaLN table line.
 
 ## Acknowledgements
 
