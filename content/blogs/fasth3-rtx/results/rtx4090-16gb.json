@@ -11,24 +11,24 @@
     "height": 480,
     "frames": 124,
     "seed": 1234,
-    "e2e_median_s": 154.32,
+    "e2e_median_s": 70.78999999999999,
     "e2e_runs_s": [
-      151.13,
-      157.51
+      71.2,
+      70.38
     ],
-    "e2e_mean_s": 154.32,
-    "denoise_s": 142.85522640310228,
-    "decode_s": 7.952102217823267,
-    "peak_gpu_gib": 14.817,
+    "e2e_mean_s": 70.78999999999999,
+    "denoise_s": 46.086661013774574,
+    "decode_s": 8.089500847272575,
+    "peak_gpu_gib": 15.225,
     "peak_gpu_allocated_gib": 12.47,
     "peak_host_gib": 28.871,
-    "peak_host_anon_gib": 24.615,
-    "fastvideo_commit": "2c0cd2a18b114b7d6101097c19c4e5740e64f502",
+    "peak_host_anon_gib": 9.37,
+    "fastvideo_commit": "73ee8c2012ac60c34ea870c76f95d543fad354ae",
     "env": {
-      "FASTVIDEO_LAUNCH_JOB": "benchmark",
-      "FASTVIDEO_SOURCE_COMMIT": "2c0cd2a18b114b7d6101097c19c4e5740e64f502",
+      "FASTVIDEO_LAUNCH_JOB": "480p-benchmark",
+      "FASTVIDEO_SOURCE_COMMIT": "73ee8c2012ac60c34ea870c76f95d543fad354ae",
+      "FASTVIDEO_LAUNCH_RECIPE": "mapped-encoder-cap-headroom",
       "FASTVIDEO_LAUNCH_MODELS": "trim-fp8,v2-fp8",
-      "MAX_JOBS": "4",
       "FASTVIDEO_H3_PARK_MODULES": "vae,audio_vae",
       "FASTVIDEO_H3_PINNED_SWAP": "0",
       "FASTVIDEO_H3_VSA_TILE_FIRST": "1",
@@ -41,7 +41,8 @@
       "FASTVIDEO_LAYERWISE_RESIDENT_BLOCKS": "12",
       "FASTVIDEO_H3_FFN_CHUNK_TOKENS": "16384",
       "FASTVIDEO_H3_VAE_TILE_BATCH": "28",
-      "FASTVIDEO_CUDA_MEMORY_CAP_GIB": "14.75",
+      "MAX_JOBS": "4",
+      "FASTVIDEO_CUDA_MEMORY_CAP_GIB": "14.25",
       "FASTVIDEO_STAGE_LOGGING": "1",
       "FASTVIDEO_MINIMAX_H3_FUSIONS": "all",
       "FASTVIDEO_VSA_TRITON": "1",
@@ -50,9 +51,9 @@
       "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True",
       "FASTVIDEO_LAYERWISE_OFFLOAD_BUFFERS": "1"
     },
-    "command": "/workspace/venv/bin/python -P /workspace/fastvideo-next/scripts/benchmarks/minimax_h3_4090/bench_pod.py rtx4090-16gb-trim-fp8-480p-benchmark-cached-pageable /workspace/vol/trim-fp8 fp8 --offload-buffers --no-vae-compile --pageable-host --height 480 --width 832 --frames 124 --seed 1234 --timed 4 --prompt-file /workspace/benchmark_prompts.json",
+    "command": "/workspace/venv/bin/python -P /workspace/fastvideo-next/scripts/benchmarks/minimax_h3_4090/bench_pod.py rtx4090-16gb-trim-fp8-480p-benchmark-cached-pageable-mapped-encoder-cap-headroom /workspace/vol/trim-fp8 fp8 --offload-buffers --no-vae-compile --pageable-host --height 480 --width 832 --frames 124 --seed 1234 --timed 4 --prompt-file /workspace/benchmark_prompts.json",
     "status": "ok",
-    "notes": "4090 capacity emulation; throughput is not measured on smaller GPUs. Host peak includes pod-wide file cache; NVML GPU peak is sampled every 100 ms. INT8 QK / BF16 PV attention; original BF16-reference quality review pending. PyTorch allocator cap 14.75 GiB; total device target 16 GiB."
+    "notes": "4090 capacity emulation; throughput is not measured on smaller GPUs. Host peak includes pod-wide file cache; NVML GPU peak is sampled every 100 ms. INT8 QK / BF16 PV attention; original BF16-reference quality review pending. PyTorch allocator cap 14.25 GiB; total device target 16 GiB."
   },
   {
     "device": "rtx4090-16gb",
@@ -66,24 +67,24 @@
     "height": 480,
     "frames": 124,
     "seed": 1234,
-    "e2e_median_s": 140.385,
+    "e2e_median_s": 73.41999999999999,
     "e2e_runs_s": [
-      134.38,
-      146.39
+      73.71,
+      73.13
     ],
-    "e2e_mean_s": 140.385,
-    "denoise_s": 128.99054188188165,
-    "decode_s": 8.041623171418905,
-    "peak_gpu_gib": 14.817,
+    "e2e_mean_s": 73.41999999999999,
+    "denoise_s": 47.30639422591776,
+    "decode_s": 7.953863805159926,
+    "peak_gpu_gib": 15.225,
     "peak_gpu_allocated_gib": 12.47,
     "peak_host_gib": 28.871,
-    "peak_host_anon_gib": 24.615,
-    "fastvideo_commit": "2c0cd2a18b114b7d6101097c19c4e5740e64f502",
+    "peak_host_anon_gib": 9.37,
+    "fastvideo_commit": "73ee8c2012ac60c34ea870c76f95d543fad354ae",
     "env": {
-      "FASTVIDEO_LAUNCH_JOB": "benchmark",
-      "FASTVIDEO_SOURCE_COMMIT": "2c0cd2a18b114b7d6101097c19c4e5740e64f502",
+      "FASTVIDEO_LAUNCH_JOB": "480p-benchmark",
+      "FASTVIDEO_SOURCE_COMMIT": "73ee8c2012ac60c34ea870c76f95d543fad354ae",
+      "FASTVIDEO_LAUNCH_RECIPE": "mapped-encoder-cap-headroom",
       "FASTVIDEO_LAUNCH_MODELS": "trim-fp8,v2-fp8",
-      "MAX_JOBS": "4",
       "FASTVIDEO_H3_PARK_MODULES": "vae,audio_vae",
       "FASTVIDEO_H3_PINNED_SWAP": "0",
       "FASTVIDEO_H3_VSA_TILE_FIRST": "1",
@@ -96,7 +97,8 @@
       "FASTVIDEO_LAYERWISE_RESIDENT_BLOCKS": "12",
       "FASTVIDEO_H3_FFN_CHUNK_TOKENS": "16384",
       "FASTVIDEO_H3_VAE_TILE_BATCH": "28",
-      "FASTVIDEO_CUDA_MEMORY_CAP_GIB": "14.75",
+      "MAX_JOBS": "4",
+      "FASTVIDEO_CUDA_MEMORY_CAP_GIB": "14.25",
       "FASTVIDEO_STAGE_LOGGING": "1",
       "FASTVIDEO_MINIMAX_H3_FUSIONS": "all",
       "FASTVIDEO_VSA_TRITON": "1",
@@ -105,8 +107,8 @@
       "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True",
       "FASTVIDEO_LAYERWISE_OFFLOAD_BUFFERS": "1"
     },
-    "command": "/workspace/venv/bin/python -P /workspace/fastvideo-next/scripts/benchmarks/minimax_h3_4090/bench_pod.py rtx4090-16gb-trim-fp8-480p-benchmark-cached-pageable /workspace/vol/trim-fp8 fp8 --offload-buffers --no-vae-compile --pageable-host --height 480 --width 832 --frames 124 --seed 1234 --timed 4 --prompt-file /workspace/benchmark_prompts.json",
+    "command": "/workspace/venv/bin/python -P /workspace/fastvideo-next/scripts/benchmarks/minimax_h3_4090/bench_pod.py rtx4090-16gb-trim-fp8-480p-benchmark-cached-pageable-mapped-encoder-cap-headroom /workspace/vol/trim-fp8 fp8 --offload-buffers --no-vae-compile --pageable-host --height 480 --width 832 --frames 124 --seed 1234 --timed 4 --prompt-file /workspace/benchmark_prompts.json",
     "status": "ok",
-    "notes": "4090 capacity emulation; throughput is not measured on smaller GPUs. Host peak includes pod-wide file cache; NVML GPU peak is sampled every 100 ms. INT8 QK / BF16 PV attention; original BF16-reference quality review pending. PyTorch allocator cap 14.75 GiB; total device target 16 GiB."
+    "notes": "4090 capacity emulation; throughput is not measured on smaller GPUs. Host peak includes pod-wide file cache; NVML GPU peak is sampled every 100 ms. INT8 QK / BF16 PV attention; original BF16-reference quality review pending. PyTorch allocator cap 14.25 GiB; total device target 16 GiB."
   }
 ]

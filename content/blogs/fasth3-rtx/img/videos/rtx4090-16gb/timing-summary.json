@@ -11,13 +11,13 @@
       "model": "trim-fp8",
       "width": 832,
       "height": 480,
-      "mean_e2e_s": 147.352,
+      "mean_e2e_s": 72.105,
       "sample_count": 4,
       "runs_s": [
-        151.13,
-        157.51,
-        134.38,
-        146.39
+        71.2,
+        70.38,
+        73.71,
+        73.13
       ],
       "protocol": "ceramics and harbor, twice each after one warmup",
       "status": "verified"
