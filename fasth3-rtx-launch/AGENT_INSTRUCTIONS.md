@@ -1,6 +1,6 @@
 # FastH3 consumer launch: instructions for device agents
 
-> **FINAL (Oct 5, 20:00 UTC): the showcase set is the 4 prompts in `showcase_prompts.json`.** Render each once per model at seed 1234. Nothing else.
+> **FINAL (Oct 5, 20:00 UTC; gallery update 21:00): the gallery uses ONE prompt, `corgi-weather`, on every device.** Render corgi-weather first with both models at seed 1234 and push it right away; the other 3 showcase prompts are optional and only if time allows. Timing runs still come first if your device has no numbers yet.
 
 The blog post is `content/blogs/fasth3-rtx/index.md` on branch `fasth3-rtx-blog` of
 `aryan5v/hao-ai-lab.github.io` (PR hao-ai-lab/hao-ai-lab.github.io#108). Its story: **FastH3 V2 (8 steps, better than

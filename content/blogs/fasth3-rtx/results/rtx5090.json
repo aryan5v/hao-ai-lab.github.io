@@ -1,0 +1,142 @@
+[
+ {
+  "device": "rtx5090",
+  "hardware": "RTX 5090",
+  "memory_limit_gib": null,
+  "model": "trim-nvfp4",
+  "repo": "FastVideo/FastVideo-FastH3-Trim-8-Step-NVFP4",
+  "prompt": "ceramics",
+  "width": 832,
+  "height": 480,
+  "frames": 124,
+  "e2e_median_s": 19.88,
+  "e2e_runs_s": [
+   21.51,
+   18.24
+  ],
+  "fastvideo_commit": "",
+  "env": {
+   "FASTVIDEO_H3_VSA_FP4": "1",
+   "FASTVIDEO_FA4": "0",
+   "HEADLINE_ENGINE_JSON": "{\"offload\": {\"text_encoder\": true, \"pin_cpu_memory\": true}}",
+   "HEADLINE_OUT": "/workspace/out",
+   "FASTVIDEO_NVFP4_MM_BACKEND": "cutlass",
+   "FASTVIDEO_H3_VAE_TILE_BATCH": "28",
+   "FASTVIDEO_STAGE_LOGGING": "1",
+   "HEADLINE_SHOWCASE": "/workspace/showcase_prompts.json",
+   "HEADLINE_EXPERIMENTAL_JSON": "{\"h3_sequential_load\": true}",
+   "HEADLINE_SETTINGS": "480p5s,768p5s",
+   "FASTVIDEO_MINIMAX_H3_FUSIONS": "all",
+   "FASTVIDEO_VSA_SM100A": "0",
+   "HEADLINE_DEVICE": "1x RTX 5090",
+   "HEADLINE_CLIP_PREFIX": "trim-nvfp4"
+  },
+  "status": "ok",
+  "notes": "bench_headline 480p5s"
+ },
+ {
+  "device": "rtx5090",
+  "hardware": "RTX 5090",
+  "memory_limit_gib": null,
+  "model": "trim-nvfp4",
+  "repo": "FastVideo/FastVideo-FastH3-Trim-8-Step-NVFP4",
+  "prompt": "ceramics",
+  "width": 1344,
+  "height": 768,
+  "frames": 124,
+  "e2e_median_s": 39.79,
+  "e2e_runs_s": [
+   40.26,
+   39.32
+  ],
+  "fastvideo_commit": "",
+  "env": {
+   "FASTVIDEO_H3_VSA_FP4": "1",
+   "FASTVIDEO_FA4": "0",
+   "HEADLINE_ENGINE_JSON": "{\"offload\": {\"text_encoder\": true, \"pin_cpu_memory\": true}}",
+   "HEADLINE_OUT": "/workspace/out",
+   "FASTVIDEO_NVFP4_MM_BACKEND": "cutlass",
+   "FASTVIDEO_H3_VAE_TILE_BATCH": "28",
+   "FASTVIDEO_STAGE_LOGGING": "1",
+   "HEADLINE_SHOWCASE": "/workspace/showcase_prompts.json",
+   "HEADLINE_EXPERIMENTAL_JSON": "{\"h3_sequential_load\": true}",
+   "HEADLINE_SETTINGS": "480p5s,768p5s",
+   "FASTVIDEO_MINIMAX_H3_FUSIONS": "all",
+   "FASTVIDEO_VSA_SM100A": "0",
+   "HEADLINE_DEVICE": "1x RTX 5090",
+   "HEADLINE_CLIP_PREFIX": "trim-nvfp4"
+  },
+  "status": "ok",
+  "notes": "bench_headline 768p5s"
+ },
+ {
+  "device": "rtx5090",
+  "hardware": "RTX 5090",
+  "memory_limit_gib": null,
+  "model": "trim-nvfp4",
+  "repo": "FastVideo/FastVideo-FastH3-Trim-8-Step-NVFP4",
+  "prompt": "harbor",
+  "width": 832,
+  "height": 480,
+  "frames": 124,
+  "e2e_median_s": 18.32,
+  "e2e_runs_s": [
+   18.27,
+   18.38
+  ],
+  "fastvideo_commit": "",
+  "env": {
+   "FASTVIDEO_H3_VSA_FP4": "1",
+   "FASTVIDEO_FA4": "0",
+   "HEADLINE_ENGINE_JSON": "{\"offload\": {\"text_encoder\": true, \"pin_cpu_memory\": true}}",
+   "HEADLINE_OUT": "/workspace/out",
+   "FASTVIDEO_NVFP4_MM_BACKEND": "cutlass",
+   "FASTVIDEO_H3_VAE_TILE_BATCH": "28",
+   "FASTVIDEO_STAGE_LOGGING": "1",
+   "HEADLINE_SHOWCASE": "/workspace/showcase_prompts.json",
+   "HEADLINE_EXPERIMENTAL_JSON": "{\"h3_sequential_load\": true}",
+   "HEADLINE_SETTINGS": "480p5s,768p5s",
+   "FASTVIDEO_MINIMAX_H3_FUSIONS": "all",
+   "FASTVIDEO_VSA_SM100A": "0",
+   "HEADLINE_DEVICE": "1x RTX 5090",
+   "HEADLINE_CLIP_PREFIX": "trim-nvfp4"
+  },
+  "status": "ok",
+  "notes": "bench_headline 480p5s"
+ },
+ {
+  "device": "rtx5090",
+  "hardware": "RTX 5090",
+  "memory_limit_gib": null,
+  "model": "trim-nvfp4",
+  "repo": "FastVideo/FastVideo-FastH3-Trim-8-Step-NVFP4",
+  "prompt": "harbor",
+  "width": 1344,
+  "height": 768,
+  "frames": 124,
+  "e2e_median_s": 39.45,
+  "e2e_runs_s": [
+   39.39,
+   39.5
+  ],
+  "fastvideo_commit": "",
+  "env": {
+   "FASTVIDEO_H3_VSA_FP4": "1",
+   "FASTVIDEO_FA4": "0",
+   "HEADLINE_ENGINE_JSON": "{\"offload\": {\"text_encoder\": true, \"pin_cpu_memory\": true}}",
+   "HEADLINE_OUT": "/workspace/out",
+   "FASTVIDEO_NVFP4_MM_BACKEND": "cutlass",
+   "FASTVIDEO_H3_VAE_TILE_BATCH": "28",
+   "FASTVIDEO_STAGE_LOGGING": "1",
+   "HEADLINE_SHOWCASE": "/workspace/showcase_prompts.json",
+   "HEADLINE_EXPERIMENTAL_JSON": "{\"h3_sequential_load\": true}",
+   "HEADLINE_SETTINGS": "480p5s,768p5s",
+   "FASTVIDEO_MINIMAX_H3_FUSIONS": "all",
+   "FASTVIDEO_VSA_SM100A": "0",
+   "HEADLINE_DEVICE": "1x RTX 5090",
+   "HEADLINE_CLIP_PREFIX": "trim-nvfp4"
+  },
+  "status": "ok",
+  "notes": "bench_headline 768p5s"
+ }
+]
