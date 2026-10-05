@@ -21,6 +21,21 @@
       ],
       "protocol": "ceramics and harbor, twice each after one warmup",
       "status": "verified"
+    },
+    {
+      "model": "v2-fp8",
+      "width": 832,
+      "height": 480,
+      "mean_e2e_s": 91.172,
+      "sample_count": 4,
+      "runs_s": [
+        92.53,
+        91.62,
+        89.86,
+        90.68
+      ],
+      "protocol": "ceramics and harbor, twice each after one warmup",
+      "status": "verified"
     }
   ]
 }
