@@ -48,7 +48,7 @@ Each row is one machine. The left clip is FastH3 V2 and the right clip is FastH3
   <figure class="fasth3-rtx-clip">
     <div class="fasth3-rtx-frame" data-file="rtx5090/v2-nvfp4-corgi-weather.mp4">
       <video controls playsinline preload="metadata" aria-label="FastH3 V2 on RTX 5090">
-        <source src="img/videos/rtx5090/v2-nvfp4-corgi-weather.mp4" type="video/mp4">
+        <source src="img/videos/rtx5090/v2-nvfp4-corgi-weather.mp4#t=0.1" type="video/mp4">
       </video>
     </div>
     <figcaption><b>V2 · NVFP4</b><span>— s</span></figcaption>
@@ -56,7 +56,7 @@ Each row is one machine. The left clip is FastH3 V2 and the right clip is FastH3
   <figure class="fasth3-rtx-clip">
     <div class="fasth3-rtx-frame" data-file="rtx5090/trim-nvfp4-corgi-weather.mp4">
       <video controls playsinline preload="metadata" aria-label="FastH3 Trim on RTX 5090">
-        <source src="img/videos/rtx5090/trim-nvfp4-corgi-weather.mp4" type="video/mp4">
+        <source src="img/videos/rtx5090/trim-nvfp4-corgi-weather.mp4#t=0.1" type="video/mp4">
       </video>
     </div>
     <figcaption><b>Trim · NVFP4</b><span>19.1 s</span></figcaption>
@@ -65,7 +65,7 @@ Each row is one machine. The left clip is FastH3 V2 and the right clip is FastH3
   <figure class="fasth3-rtx-clip">
     <div class="fasth3-rtx-frame" data-file="rtx-pro-6000/v2-nvfp4-corgi-weather.mp4">
       <video controls playsinline preload="metadata" aria-label="FastH3 V2 on RTX PRO 6000">
-        <source src="img/videos/rtx-pro-6000/v2-nvfp4-corgi-weather.mp4" type="video/mp4">
+        <source src="img/videos/rtx-pro-6000/v2-nvfp4-corgi-weather.mp4#t=0.1" type="video/mp4">
       </video>
     </div>
     <figcaption><b>V2 · NVFP4</b><span>— s</span></figcaption>
@@ -73,7 +73,7 @@ Each row is one machine. The left clip is FastH3 V2 and the right clip is FastH3
   <figure class="fasth3-rtx-clip">
     <div class="fasth3-rtx-frame" data-file="rtx-pro-6000/trim-nvfp4-corgi-weather.mp4">
       <video controls playsinline preload="metadata" aria-label="FastH3 Trim on RTX PRO 6000">
-        <source src="img/videos/rtx-pro-6000/trim-nvfp4-corgi-weather.mp4" type="video/mp4">
+        <source src="img/videos/rtx-pro-6000/trim-nvfp4-corgi-weather.mp4#t=0.1" type="video/mp4">
       </video>
     </div>
     <figcaption><b>Trim · NVFP4</b><span>12.2 s</span></figcaption>
@@ -82,7 +82,7 @@ Each row is one machine. The left clip is FastH3 V2 and the right clip is FastH3
   <figure class="fasth3-rtx-clip">
     <div class="fasth3-rtx-frame" data-file="rtx4090-24gb/v2-fp8-corgi-weather.mp4">
       <video controls playsinline preload="metadata" aria-label="FastH3 V2 on RTX 4090">
-        <source src="img/videos/rtx4090-24gb/v2-fp8-corgi-weather.mp4" type="video/mp4">
+        <source src="img/videos/rtx4090-24gb/v2-fp8-corgi-weather.mp4#t=0.1" type="video/mp4">
       </video>
     </div>
     <figcaption><b>V2 · FP8</b><span>— s</span></figcaption>
@@ -90,7 +90,7 @@ Each row is one machine. The left clip is FastH3 V2 and the right clip is FastH3
   <figure class="fasth3-rtx-clip">
     <div class="fasth3-rtx-frame" data-file="rtx4090-24gb/trim-fp8-corgi-weather.mp4">
       <video controls playsinline preload="metadata" aria-label="FastH3 Trim on RTX 4090">
-        <source src="img/videos/rtx4090-24gb/trim-fp8-corgi-weather.mp4" type="video/mp4">
+        <source src="img/videos/rtx4090-24gb/trim-fp8-corgi-weather.mp4#t=0.1" type="video/mp4">
       </video>
     </div>
     <figcaption><b>Trim · FP8</b><span>43.9 s</span></figcaption>
@@ -99,7 +99,7 @@ Each row is one machine. The left clip is FastH3 V2 and the right clip is FastH3
   <figure class="fasth3-rtx-clip">
     <div class="fasth3-rtx-frame" data-file="spark-1x/v2-nvfp4-corgi-weather.mp4">
       <video controls playsinline preload="metadata" aria-label="FastH3 V2 on DGX Spark">
-        <source src="img/videos/spark-1x/v2-nvfp4-corgi-weather.mp4" type="video/mp4">
+        <source src="img/videos/spark-1x/v2-nvfp4-corgi-weather.mp4#t=0.1" type="video/mp4">
       </video>
     </div>
     <figcaption><b>V2 · NVFP4</b><span>— s</span></figcaption>
@@ -107,7 +107,7 @@ Each row is one machine. The left clip is FastH3 V2 and the right clip is FastH3
   <figure class="fasth3-rtx-clip">
     <div class="fasth3-rtx-frame" data-file="spark-1x/trim-nvfp4-corgi-weather.mp4">
       <video controls playsinline preload="metadata" aria-label="FastH3 Trim on DGX Spark">
-        <source src="img/videos/spark-1x/trim-nvfp4-corgi-weather.mp4" type="video/mp4">
+        <source src="img/videos/spark-1x/trim-nvfp4-corgi-weather.mp4#t=0.1" type="video/mp4">
       </video>
     </div>
     <figcaption><b>Trim · NVFP4</b><span>125.8 s</span></figcaption>
@@ -116,7 +116,7 @@ Each row is one machine. The left clip is FastH3 V2 and the right clip is FastH3
   <figure class="fasth3-rtx-clip">
     <div class="fasth3-rtx-frame" data-file="m4max/v2-int6-corgi-weather.mp4">
       <video controls playsinline preload="metadata" aria-label="FastH3 V2 on Mac (M4 Max)">
-        <source src="img/videos/m4max/v2-int6-corgi-weather.mp4" type="video/mp4">
+        <source src="img/videos/m4max/v2-int6-corgi-weather.mp4#t=0.1" type="video/mp4">
       </video>
     </div>
     <figcaption><b>V2 · INT6</b><span>— s</span></figcaption>
@@ -124,10 +124,10 @@ Each row is one machine. The left clip is FastH3 V2 and the right clip is FastH3
   <figure class="fasth3-rtx-clip">
     <div class="fasth3-rtx-frame" data-file="m4max/trim-int6-corgi-weather.mp4">
       <video controls playsinline preload="metadata" aria-label="FastH3 Trim on Mac (M4 Max)">
-        <source src="img/videos/m4max/trim-int6-corgi-weather.mp4" type="video/mp4">
+        <source src="img/videos/m4max/trim-int6-corgi-weather.mp4#t=0.1" type="video/mp4">
       </video>
     </div>
-    <figcaption><b>Trim · INT6</b><span>— s</span></figcaption>
+    <figcaption><b>Trim · INT6</b><span>923.5 s</span></figcaption>
   </figure>
 </div>
 
@@ -150,7 +150,7 @@ We report two numbers per machine: a 5 s clip at 832×480 and a 5 s clip at 1344
 | RTX 4090, 12 GB limit | 12 GB | — | — | — | — |
 | DGX Spark | 128 GB unified | 141.4 s | 125.8 s | — | — |
 | 2× DGX Spark | 128 GB each | 87.2 s | 78.3 s | — | — |
-| Mac, M4 Max | 36 GB unified | — | — | — | — |
+| Mac, M4 Max | 36 GB unified | — | 923.5 s | — | — |
 <!-- results-table:end -->
 <div class="fasth3-rtx-todo"><b>TODO (numbers).</b> Device agents push <code>results/&lt;device&gt;.json</code>; Figure 1 is generated from those files. Dashes are pending.</div>
 
@@ -353,6 +353,18 @@ The FastVideo team worked closely with [Nuva Lab](https://nuvalab.ai/), [NVIDIA 
   background: transparent;
 }
 
+.fasth3-rtx-article .fasth3-rtx-frame.is-loaded {
+  border-style: solid;
+}
+
+.fasth3-rtx-article .fasth3-rtx-frame.is-loaded::before {
+  display: none;
+}
+
+.fasth3-rtx-article .fasth3-rtx-frame.is-loaded video {
+  background: #000;
+}
+
 .fasth3-rtx-article .fasth3-rtx-clip > figcaption {
   display: flex;
   flex-wrap: wrap;
@@ -412,3 +424,10 @@ The FastVideo team worked closely with [Nuva Lab](https://nuvalab.ai/), [NVIDIA 
   }
 }
 </style>
+
+<script>
+document.querySelectorAll(".fasth3-rtx-frame video").forEach(function (v) {
+  var mark = function () { v.closest(".fasth3-rtx-frame").classList.add("is-loaded"); };
+  if (v.readyState >= 1) mark(); else v.addEventListener("loadedmetadata", mark);
+});
+</script>
