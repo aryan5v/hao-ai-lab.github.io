@@ -1,0 +1,42 @@
+[
+  {
+    "device": "rtx4090-24gb",
+    "model": "trim-fp8",
+    "prompt": "corgi-weather",
+    "width": 832,
+    "height": 480,
+    "frames": 124,
+    "seed": 1234,
+    "guidance_scale": 1.0,
+    "dmd_forwards": 8,
+    "e2e_s": 121.57,
+    "sample_count": 1,
+    "mode": "first cold generate request; not a warm benchmark average",
+    "model_load_s": 49.3,
+    "peak_gpu_gib": 23.582,
+    "peak_host_gib": 28.871,
+    "fastvideo_commit": "1d5d9c9703a7b1a6f8a7e691cc5d46aeaf9ed269",
+    "model_revision": "0a358bc0b5c38fd9f97f2fdcbe11c086df25b754",
+    "status": "ok"
+  },
+  {
+    "device": "rtx4090-24gb",
+    "model": "v2-fp8",
+    "prompt": "corgi-weather",
+    "width": 832,
+    "height": 480,
+    "frames": 124,
+    "seed": 1234,
+    "guidance_scale": 1.0,
+    "dmd_forwards": 8,
+    "e2e_s": 103.25,
+    "sample_count": 1,
+    "mode": "first cold generate request; not a warm benchmark average",
+    "model_load_s": 49.0,
+    "peak_gpu_gib": 23.977,
+    "peak_host_gib": 28.871,
+    "fastvideo_commit": "659a4840f381621c388fa1e2d10af84ea242f784",
+    "model_revision": "ec83faa2fcdee27bb9455d0cdddbbcf6c2d12306",
+    "status": "ok"
+  }
+]
