@@ -148,7 +148,7 @@ We report two numbers per machine: a 5 s clip at 832×480 and a 5 s clip at 1344
 | RTX 4090 | 24 GB | — | 41.8 s | — | — |
 | RTX 4090, 16 GB limit | 16 GB | — | — | — | — |
 | RTX 4090, 12 GB limit | 12 GB | — | — | — | — |
-| DGX Spark | 128 GB unified | 141.4 s | 134.5 s | — | — |
+| DGX Spark | 128 GB unified | 141.4 s | 124.1 s | — | — |
 | 2× DGX Spark | 128 GB each | 87.2 s | 78.3 s | — | — |
 | Mac, M4 Max | 36 GB unified | — | — | — | — |
 <!-- results-table:end -->
