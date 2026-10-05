@@ -1,0 +1,55 @@
+{
+  "device": "rtx4090-24gb",
+  "frames": 124,
+  "seed": 1234,
+  "guidance": 1.0,
+  "dmd_forwards": 8,
+  "definition": "Wall time from prompt to finished MP4, including text encoding, denoising, video/audio decode and MP4 write; model construction and the first cold request excluded.",
+  "capacity_note": "Memory tiers are capacity emulation on a 4090, not measured smaller-GPU throughput.",
+  "warm_averages": [
+    {
+      "model": "trim-fp8",
+      "width": 832,
+      "height": 480,
+      "mean_e2e_s": 43.925,
+      "sample_count": 4,
+      "runs_s": [
+        43.9,
+        43.91,
+        43.91,
+        43.98
+      ],
+      "protocol": "ceramics and harbor, twice each after one warmup",
+      "status": "verified"
+    },
+    {
+      "model": "trim-fp8",
+      "width": 1344,
+      "height": 768,
+      "mean_e2e_s": 132.773,
+      "sample_count": 4,
+      "runs_s": [
+        136.5,
+        134.38,
+        123.68,
+        136.53
+      ],
+      "protocol": "ceramics and harbor, twice each after one warmup",
+      "status": "verified"
+    },
+    {
+      "model": "v2-fp8",
+      "width": 832,
+      "height": 480,
+      "mean_e2e_s": 51.93,
+      "sample_count": 3,
+      "runs_s": [
+        51.68,
+        51.07,
+        53.04
+      ],
+      "protocol": "three final showcase prompts after the first corgi request",
+      "status": "preliminary; standard benchmark pending"
+    }
+  ]
+}

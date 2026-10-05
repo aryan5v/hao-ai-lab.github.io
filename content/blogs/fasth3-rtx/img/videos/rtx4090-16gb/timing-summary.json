@@ -1,0 +1,26 @@
+{
+  "device": "rtx4090-16gb",
+  "frames": 124,
+  "seed": 1234,
+  "guidance": 1.0,
+  "dmd_forwards": 8,
+  "definition": "Wall time from prompt to finished MP4, including text encoding, denoising, video/audio decode and MP4 write; model construction and the first cold request excluded.",
+  "capacity_note": "Memory tiers are capacity emulation on a 4090, not measured smaller-GPU throughput.",
+  "warm_averages": [
+    {
+      "model": "trim-fp8",
+      "width": 832,
+      "height": 480,
+      "mean_e2e_s": 147.352,
+      "sample_count": 4,
+      "runs_s": [
+        151.13,
+        157.51,
+        134.38,
+        146.39
+      ],
+      "protocol": "ceramics and harbor, twice each after one warmup",
+      "status": "verified"
+    }
+  ]
+}
