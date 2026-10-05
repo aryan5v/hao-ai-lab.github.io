@@ -1,8 +1,10 @@
 # FastH3 consumer launch: instructions for device agents
 
+> **BRANCH MOVED (Oct 5, 22:00 UTC): push to `fasth3-rtx-launch`, not `fasth3-rtx-blog`.** The blog PR is now one commit with only the post; the lead session copies your clips and numbers into it. If you have a clone on `fasth3-rtx-blog`, do not pull or push it: `git fetch origin fasth3-rtx-launch && git checkout -B fasth3-rtx-launch origin/fasth3-rtx-launch`, re-copy any unpushed files, then push.
+>
 > **FINAL (Oct 5, 20:00 UTC; gallery update 21:00): the gallery uses ONE prompt, `corgi-weather`, on every device.** Render corgi-weather first with both models at seed 1234 and push it right away; the other 3 showcase prompts are optional and only if time allows. Timing runs still come first if your device has no numbers yet.
 
-The blog post is `content/blogs/fasth3-rtx/index.md` on branch `fasth3-rtx-blog` of
+The blog post is `content/blogs/fasth3-rtx/index.md` (PR hao-ai-lab/hao-ai-lab.github.io#108, branch `fasth3-rtx-blog`, lead only). Your clips and results go on branch `fasth3-rtx-launch` of
 `aryan5v/hao-ai-lab.github.io` (PR hao-ai-lab/hao-ai-lab.github.io#108). Its story: **FastH3 V2 (8 steps, better than
 base H3) now runs on one consumer machine**, and **FastH3 Trim** is an experimental pruned version that is smaller and
 faster. You produce clips and times for your machines and push them to this branch. Do not edit `index.md`; the lead
@@ -84,12 +86,12 @@ builds Figure 1 and the table directly from these files.
 ## Push
 
 ```bash
-git clone --filter=blob:none --sparse -b fasth3-rtx-blog https://github.com/aryan5v/hao-ai-lab.github.io.git blog
+git clone --filter=blob:none --sparse -b fasth3-rtx-launch https://github.com/aryan5v/hao-ai-lab.github.io.git blog
 cd blog && git sparse-checkout set content/blogs/fasth3-rtx fasth3-rtx-launch
 # copy your clips into content/blogs/fasth3-rtx/img/videos/<device>/ and write results/<device>.json
 git add content/blogs/fasth3-rtx/img/videos/<device> content/blogs/fasth3-rtx/results/<device>.json
 git commit -m "[blog]: FastH3 V2 and Trim clips and times on <device>"
-git pull --rebase origin fasth3-rtx-blog && git push origin HEAD:fasth3-rtx-blog
+git pull --rebase origin fasth3-rtx-launch && git push origin HEAD:fasth3-rtx-launch
 ```
 
 Push after each device or batch of clips, not only at the end. Touch only your own folders and results files. If the
