@@ -19,5 +19,26 @@
     "model_revision": "0a358bc0b5c38fd9f97f2fdcbe11c086df25b754",
     "status": "ok",
     "capacity_note": "Allocator-capped RTX 4090 capacity emulation; not smaller-GPU throughput."
+  },
+  {
+    "device": "rtx4090-16gb",
+    "model": "v2-fp8",
+    "prompt": "corgi-weather",
+    "width": 832,
+    "height": 480,
+    "frames": 124,
+    "seed": 1234,
+    "guidance_scale": 1.0,
+    "dmd_forwards": 8,
+    "e2e_s": 204.73,
+    "sample_count": 1,
+    "mode": "first cold generate request; not a warm benchmark average",
+    "model_load_s": 48.8,
+    "peak_gpu_gib": 14.115,
+    "peak_host_gib": 28.871,
+    "fastvideo_commit": "1299c7d084483c20a6e3c66e90a7711523ecf9ce",
+    "model_revision": "ec83faa2fcdee27bb9455d0cdddbbcf6c2d12306",
+    "status": "ok",
+    "capacity_note": "Allocator-capped RTX 4090 capacity emulation; not smaller-GPU throughput."
   }
 ]
